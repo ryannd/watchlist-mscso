@@ -19,6 +19,4 @@ data class SearchResult(
     val releaseDate: String,
     @SerializedName("known_for")
     val knownFor: List<SearchResult>?
-): Serializable {
-
-}
+): Serializable
