@@ -7,7 +7,7 @@ data class SearchResult(
     val id: String,
     @SerializedName("backdrop_path")
     val backgroundUrl: String,
-    @SerializedName("name")
+    @SerializedName("name", alternate=["title"])
     val title: String,
     @SerializedName("overview")
     val description: String,

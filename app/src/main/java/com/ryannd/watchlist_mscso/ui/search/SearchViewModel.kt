@@ -10,6 +10,8 @@ import com.ryannd.watchlist_mscso.api.SearchResult
 import com.ryannd.watchlist_mscso.api.SearchResultRepository
 import com.ryannd.watchlist_mscso.api.TmdbApi
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,18 +22,25 @@ class SearchViewModel : ViewModel() {
     private val repository = SearchResultRepository(tmdbApi)
     private val _uiState  = MutableStateFlow(SearchUiState())
     val uiState: StateFlow<SearchUiState> = _uiState.asStateFlow()
-    fun doSearch(searchTerm: String) {
+    private var searchJob: Job? = null
+    private fun doSearch(searchTerm: String) {
         viewModelScope.launch(
             context = viewModelScope.coroutineContext + Dispatchers.IO
         ) {
-            _uiState.value.currentSearchTerm = searchTerm
             if(searchTerm != "") {
                 val res = repository.getSearch(searchTerm)
-                _uiState.value.searchResults = res
-                Log.d("Search Screen", res.toString())
+                _uiState.value = SearchUiState(searchResults = res)
             } else {
-                _uiState.value.searchResults = listOf()
+                _uiState.value = SearchUiState(searchResults = listOf())
             }
+        }
+    }
+
+    fun searchDebounced(searchTerm: String) {
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch {
+            delay(300)
+            doSearch(searchTerm)
         }
     }
 }
