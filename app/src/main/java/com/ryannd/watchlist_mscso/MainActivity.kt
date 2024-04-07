@@ -6,18 +6,16 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.google.gson.internal.GsonBuildConfig
+import com.ryannd.watchlist_mscso.auth.FirebaseAuthenticator
 import com.ryannd.watchlist_mscso.ui.nav.NavigationBar
 import com.ryannd.watchlist_mscso.ui.nav.NavigationGraph
 import com.ryannd.watchlist_mscso.ui.theme.WatchlistmscsoTheme
 
 class MainActivity : ComponentActivity() {
+    lateinit var authenticator : FirebaseAuthenticator
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
@@ -39,5 +37,11 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        authenticator = FirebaseAuthenticator(activityResultRegistry)
+        lifecycle.addObserver(authenticator)
     }
 }

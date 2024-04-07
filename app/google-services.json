@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "341077491776",
+    "project_id": "watchlist-mscso",
+    "storage_bucket": "watchlist-mscso.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:341077491776:android:58d1053754ee697b799fa5",
+        "android_client_info": {
+          "package_name": "com.ryannd.watchlist_mscso"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDeS6_N3BJOpvu4Qr9tcdxcsGsaUh6pVwY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
