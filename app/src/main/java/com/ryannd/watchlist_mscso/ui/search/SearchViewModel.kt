@@ -1,12 +1,7 @@
 package com.ryannd.watchlist_mscso.ui.search
 
-import android.util.Log
-import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ryannd.watchlist_mscso.api.SearchResult
 import com.ryannd.watchlist_mscso.api.SearchResultRepository
 import com.ryannd.watchlist_mscso.api.TmdbApi
 import kotlinx.coroutines.Dispatchers

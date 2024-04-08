@@ -13,7 +13,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 
 @Composable
-fun NavigationBar(
+fun BottomNavigationBar(
     navController: NavHostController, modifier: Modifier = Modifier
 ) {
     val screens = listOf(
@@ -28,6 +28,9 @@ fun NavigationBar(
        val currentRoute = navBackStackEntry?.destination?.route
 
        screens.forEach {screen ->
+           if(!screen.onBar) {
+               return@forEach
+           }
            NavigationBarItem(
                label = {
                    Text(text = screen.title!!)

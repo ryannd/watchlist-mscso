@@ -1,4 +1,4 @@
-package com.ryannd.watchlist_mscso.api
+package com.ryannd.watchlist_mscso.api.data
 
 import java.io.Serializable
 import com.google.gson.annotations.SerializedName

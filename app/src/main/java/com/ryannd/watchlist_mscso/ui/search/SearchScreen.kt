@@ -26,7 +26,8 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun SearchScreen(
-    searchViewModel: SearchViewModel = viewModel()
+    searchViewModel: SearchViewModel = viewModel(),
+    navigateTo: (String) -> Unit
 ) {
     val searchUiState by searchViewModel.uiState.collectAsState()
     var text by remember { mutableStateOf("") }
@@ -45,7 +46,7 @@ fun SearchScreen(
         }
         LazyColumn {
             items(searchUiState.searchResults) { searchResult ->
-                SearchResult(searchResult)
+                SearchResult(searchResult, navigateTo)
             }
         }
     }

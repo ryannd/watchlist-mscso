@@ -1,11 +1,10 @@
 package com.ryannd.watchlist_mscso.ui.search
 
-import android.util.Log
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
-import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -16,15 +15,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.ryannd.watchlist_mscso.api.SearchResult
+import com.ryannd.watchlist_mscso.api.data.SearchResult
 import java.util.Locale
 
 @Composable
 fun SearchResult(
-    searchResult: SearchResult
+    searchResult: SearchResult,
+    navigateTo: (String) -> Unit
 ) {
     ListItem(
         headlineContent = { Text(searchResult.title, maxLines = 1, overflow = TextOverflow.Ellipsis) },
@@ -41,7 +40,10 @@ fun SearchResult(
             )
         },
         supportingContent = { Text(searchResult.type.uppercase(Locale.ROOT)) },
-        trailingContent = { Icon(imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = "To Detail")}
+        trailingContent = { Icon(imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = "To Detail")},
+        modifier = Modifier.clickable {
+            navigateTo("detail_screen/id=${searchResult.id}&type=${searchResult.type}")
+        }
     )
     HorizontalDivider()
 }

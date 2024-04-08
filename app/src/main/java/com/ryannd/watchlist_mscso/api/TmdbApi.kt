@@ -1,26 +1,27 @@
 package com.ryannd.watchlist_mscso.api
 
-import android.content.pm.ApplicationInfo
-import androidx.core.os.BuildCompat
 import com.ryannd.watchlist_mscso.BuildConfig
-import okhttp3.Authenticator
+import com.ryannd.watchlist_mscso.api.data.MovieDetail
+import com.ryannd.watchlist_mscso.api.data.SearchResult
+import com.ryannd.watchlist_mscso.api.data.ShowDetail
 import okhttp3.HttpUrl
-import okhttp3.Interceptor
 import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.Route
 import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
-import kotlin.coroutines.coroutineContext
 
 interface TmdbApi {
     @GET("/3/search/multi")
     suspend fun getSearch(@Query("query") searchTerm: String) : SearchResponse
+
+    @GET("/3/movie/{movieId}")
+    suspend fun getMovieDetail(@Path("movieId") movieId: String) : MovieDetail
+
+    @GET("/3/tv/{showId}")
+    suspend fun getShowDetail(@Path("showId") showId: String) : ShowDetail
 
     class SearchResponse(
         val page: Int,

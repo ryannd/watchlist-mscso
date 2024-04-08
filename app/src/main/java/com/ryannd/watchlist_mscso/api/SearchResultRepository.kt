@@ -1,5 +1,7 @@
 package com.ryannd.watchlist_mscso.api
 
+import com.ryannd.watchlist_mscso.api.data.SearchResult
+
 class SearchResultRepository(private val tmdbApi: TmdbApi) {
     private fun filterOutPeople(response: TmdbApi.SearchResponse): List<SearchResult> {
         val results = response.results
