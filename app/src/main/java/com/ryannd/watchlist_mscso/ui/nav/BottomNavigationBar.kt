@@ -1,6 +1,7 @@
 package com.ryannd.watchlist_mscso.ui.nav
 
 import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
@@ -20,9 +21,8 @@ fun BottomNavigationBar(
         Screens.ListScreen, Screens.Search, Screens.Profile
     )
 
-   androidx.compose.material3.NavigationBar(
-       modifier = modifier,
-       containerColor = Color.LightGray
+   NavigationBar(
+       modifier = modifier
    ) {
        val navBackStackEntry by navController.currentBackStackEntryAsState()
        val currentRoute = navBackStackEntry?.destination?.route

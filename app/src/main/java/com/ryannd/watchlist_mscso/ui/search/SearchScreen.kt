@@ -19,6 +19,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,7 +31,7 @@ fun SearchScreen(
     navigateTo: (String) -> Unit
 ) {
     val searchUiState by searchViewModel.uiState.collectAsState()
-    var text by remember { mutableStateOf("") }
+    var text by rememberSaveable { mutableStateOf("") }
 
     Column {
         Row {
@@ -40,7 +41,10 @@ fun SearchScreen(
                     text = it
                     searchViewModel.searchDebounced(it)
                 },
-                modifier = Modifier.fillMaxWidth().padding(5.dp).border(BorderStroke(1.dp, Color.Black), RoundedCornerShape(5.dp)),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(5.dp)
+                    .border(BorderStroke(1.dp, Color.Black), RoundedCornerShape(5.dp)),
                 trailingIcon = { Icon(imageVector = Icons.Outlined.Search, contentDescription = "Search Icon") }
             )
         }
