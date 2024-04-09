@@ -15,4 +15,6 @@ data class ShowDetail(
     val posterUrl: String,
     @SerializedName("seasons")
     val seasons: List<Seasons>,
+    @SerializedName("number_of_seasons")
+    val numSeasons: Int
 )

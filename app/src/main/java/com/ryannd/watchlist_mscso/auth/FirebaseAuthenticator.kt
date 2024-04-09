@@ -14,6 +14,7 @@ import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.auth
+import com.ryannd.watchlist_mscso.db.UserDbHelper
 
 class FirebaseAuthenticator(private val registry: ActivityResultRegistry) :
     DefaultLifecycleObserver,
@@ -21,6 +22,7 @@ class FirebaseAuthenticator(private val registry: ActivityResultRegistry) :
 
     private lateinit var signInLauncher: ActivityResultLauncher<Intent>
     private var pendingLogin = false
+    val userDbHelper = UserDbHelper()
     init {
         Firebase.auth.addAuthStateListener(this)
     }
@@ -42,6 +44,9 @@ class FirebaseAuthenticator(private val registry: ActivityResultRegistry) :
         if (result.resultCode == RESULT_OK) {
             // Successfully signed in
             val user = FirebaseAuth.getInstance().currentUser
+            if(user != null) {
+                userDbHelper.handleLogin(user.uid)
+            }
             // ...
         } else {
             // Sign in failed. If response is null the user canceled the
