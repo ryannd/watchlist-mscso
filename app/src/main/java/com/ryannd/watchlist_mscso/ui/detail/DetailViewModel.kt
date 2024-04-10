@@ -6,7 +6,6 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.CreationExtras
 import com.ryannd.watchlist_mscso.api.TmdbApi
 import com.ryannd.watchlist_mscso.ui.nav.NavBarState
 import kotlinx.coroutines.Dispatchers
@@ -31,12 +30,29 @@ class DetailViewModel(private val type: String, private val id: String, private 
             when(type) {
                 "tv" -> {
                     val res = tmdbApi.getShowDetail(id)
-                    _uiState.value = DetailUiState(showDetail = res)
+                    _uiState.value = DetailUiState(
+                        title = res.title,
+                        backgroundUrl = res.backgroundUrl,
+                        description = res.description,
+                        mediaType = "tv",
+                        numSeasons = res.numSeasons,
+                        posterUrl = res.posterUrl,
+                        seasons = res.seasons,
+                        tmdbId = res.id.toString()
+                    )
                     onComposing(NavBarState(title = res.title, showTopBar = true))
                 }
                 "movie" -> {
                     val res = tmdbApi.getMovieDetail(id)
-                    _uiState.value = DetailUiState(movieDetail = res)
+                    _uiState.value = DetailUiState(
+                        title = res.title,
+                        backgroundUrl = res.backgroundUrl,
+                        description = res.description,
+                        mediaType = "tv",
+                        posterUrl = res.posterUrl,
+                        runtime = res.runtime,
+                        tmdbId = res.id.toString()
+                    )
                     onComposing(NavBarState(title = res.title, showTopBar = true))
                 }
                 else -> {

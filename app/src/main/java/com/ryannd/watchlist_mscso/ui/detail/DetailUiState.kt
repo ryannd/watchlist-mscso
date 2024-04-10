@@ -1,9 +1,16 @@
 package com.ryannd.watchlist_mscso.ui.detail
 
-import com.ryannd.watchlist_mscso.api.data.MovieDetail
-import com.ryannd.watchlist_mscso.api.data.ShowDetail
+import com.ryannd.watchlist_mscso.api.data.Seasons
 
 data class DetailUiState(
-    var showDetail: ShowDetail? = null,
-    var movieDetail: MovieDetail? = null
+    var mediaType: String = "",
+    var title: String = "",
+    var backgroundUrl: String = "",
+    var description: String = "",
+    var posterUrl: String = "",
+    var releaseDate: String? = null,
+    var runtime: Int? = null,
+    var seasons: List<Seasons>? = null,
+    var numSeasons: Int? = null,
+    var tmdbId: String = ""
 )

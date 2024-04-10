@@ -2,21 +2,22 @@ package com.ryannd.watchlist_mscso.auth
 
 import android.app.Activity.RESULT_OK
 import android.content.Intent
-import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.ActivityResultRegistry
+import androidx.compose.runtime.MutableState
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.firebase.ui.auth.AuthUI
-import com.google.firebase.Firebase
-import com.google.firebase.auth.FirebaseAuth
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
+import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.auth
 import com.ryannd.watchlist_mscso.db.UserDbHelper
 
-class FirebaseAuthenticator(private val registry: ActivityResultRegistry) :
+
+class FirebaseAuthenticator(private val registry: ActivityResultRegistry, private val isAlertShowing: MutableState<Boolean>) :
     DefaultLifecycleObserver,
     FirebaseAuth.AuthStateListener {
 
@@ -40,12 +41,11 @@ class FirebaseAuthenticator(private val registry: ActivityResultRegistry) :
     }
 
     private fun onSignInResult(result: FirebaseAuthUIAuthenticationResult) {
-        val response = result.idpResponse
         if (result.resultCode == RESULT_OK) {
             // Successfully signed in
             val user = FirebaseAuth.getInstance().currentUser
             if(user != null) {
-                userDbHelper.handleLogin(user.uid)
+                userDbHelper.handleLogin(user.uid, isAlertShowing)
             }
             // ...
         } else {
@@ -56,7 +56,7 @@ class FirebaseAuthenticator(private val registry: ActivityResultRegistry) :
         }
     }
 
-    private fun user(): FirebaseUser? {
+    fun user(): FirebaseUser? {
         return Firebase.auth.currentUser
     }
 

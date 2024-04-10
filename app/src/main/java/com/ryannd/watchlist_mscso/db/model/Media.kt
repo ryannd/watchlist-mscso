@@ -7,9 +7,10 @@ data class Media(
     var title: String,
     var description: String,
     var type: String,
-    var id: String,
+    var tmdbId: String,
     var poster: String,
-    var seasons: Season?,
+    var background: String,
+    var seasons: List<Seasons>?,
     var numSeasons: Int?,
     @DocumentId var firestoreID: String = ""
 )
