@@ -1,8 +1,7 @@
 package com.ryannd.watchlist_mscso.db.model
 
 data class Season(
-    val mediaUid: String,
-    val episodeCount: Int,
-    val seasonNumber: Int,
-    val title: String
+    val episodeCount: Int = 0,
+    val seasonNumber: Int = 0,
+    val title: String = ""
 )

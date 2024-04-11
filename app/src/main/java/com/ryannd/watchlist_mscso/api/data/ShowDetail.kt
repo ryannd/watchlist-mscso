@@ -1,6 +1,7 @@
 package com.ryannd.watchlist_mscso.api.data
 
 import com.google.gson.annotations.SerializedName
+import com.ryannd.watchlist_mscso.db.model.Season
 
 data class ShowDetail(
     @SerializedName("id")
@@ -14,7 +15,7 @@ data class ShowDetail(
     @SerializedName("poster_path")
     val posterUrl: String,
     @SerializedName("seasons")
-    val seasons: List<Seasons>,
+    val seasons: List<Season>,
     @SerializedName("number_of_seasons")
     val numSeasons: Int
 )

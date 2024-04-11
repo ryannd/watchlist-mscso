@@ -1,6 +1,7 @@
 package com.ryannd.watchlist_mscso.db
 
 import android.util.Log
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.ryannd.watchlist_mscso.db.model.Media
 
@@ -9,6 +10,11 @@ class MediaDbHelper {
     private val rootCollection = "media"
     private val userDb = UserDbHelper()
 
+    fun getMedia(uuid: String, onComplete: (doc: DocumentSnapshot) -> Unit) {
+        db.collection(rootCollection).document(uuid).get().addOnSuccessListener {
+            onComplete(it)
+        }
+    }
     fun addNewMediaToList(newMedia: Media, status: String, onDismissRequest: () -> Unit) {
         val tmdbId = newMedia.tmdbId
         db.collection(rootCollection).whereEqualTo("tmdbId", tmdbId).get().addOnSuccessListener { querySnapshot ->

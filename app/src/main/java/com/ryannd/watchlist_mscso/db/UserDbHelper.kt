@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.runtime.MutableState
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.ryannd.watchlist_mscso.db.model.MediaEntry
@@ -13,6 +14,13 @@ import java.util.Locale
 class UserDbHelper {
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val rootCollection = "users"
+    private val entryDbHelper = EntryDbHelper()
+
+    fun getUserData(uuid: String, onComplete: (doc: DocumentSnapshot) -> Unit) {
+        db.collection(rootCollection).document(uuid).get().addOnSuccessListener {
+            onComplete(it)
+        }
+    }
 
     fun addNewUser(user: User) {
         db.collection(rootCollection).document(user.userUid).set(user)
@@ -38,9 +46,11 @@ class UserDbHelper {
                 mediaType = type
             )
             val userRef = db.collection(rootCollection).document(userUid)
-            userRef.update("watchlist.${status.lowercase(Locale.ROOT)}", FieldValue.arrayUnion(newMediaEntry)).addOnSuccessListener {
-                Log.d("UserDB", "Updated watchlist")
-                onDismissRequest()
+            entryDbHelper.createEntry(newMediaEntry) {
+                userRef.update("watchlist.${status.lowercase(Locale.ROOT)}", FieldValue.arrayUnion(it.id)).addOnSuccessListener {
+                    Log.d("UserDB", "Updated watchlist")
+                    onDismissRequest()
+                }
             }
         }
     }

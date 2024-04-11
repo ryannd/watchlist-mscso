@@ -7,6 +7,7 @@ data class User(
     val followingList: List<String> = listOf(),
     val followerList: List<String> = listOf(),
     val watchlist: Watchlist = Watchlist(),
-    val userUid: String,
+    val userUid: String = "",
+    val listLookup: HashMap<String, String> = HashMap(),
     @DocumentId var firestoreID: String = ""
 )
