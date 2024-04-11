@@ -11,6 +11,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalLifecycleOwner
@@ -27,7 +29,9 @@ fun ListScreen(
     val titles = listOf("Planning", "Watching", "Completed")
     val listUiState = listViewModel.uiState.collectAsState()
     listViewModel.ObserveLifecycle(LocalLifecycleOwner.current.lifecycle)
-
+    var currentList by remember {
+        mutableStateOf(listUiState.value.planning)
+    }
     Column {
         PrimaryTabRow(selectedTabIndex = selected) {
             titles.forEachIndexed { index, title ->
@@ -36,7 +40,19 @@ fun ListScreen(
         }
 
         LazyColumn {
-            items(listUiState.value.completed ?: listOf()) {
+            when(selected) {
+                0 -> {
+                    currentList = listUiState.value.planning
+                }
+                1 -> {
+                    currentList = listUiState.value.watching
+                }
+                2 -> {
+                    currentList = listUiState.value.completed
+                }
+            }
+
+            items(currentList ?: listOf()) {
                 val media = listUiState.value.mediaLookup[it.mediaUid]
                 if(media != null) {
                     Text(text = media.title)

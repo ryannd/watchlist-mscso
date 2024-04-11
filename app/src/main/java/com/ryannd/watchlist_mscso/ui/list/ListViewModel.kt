@@ -1,5 +1,6 @@
 package com.ryannd.watchlist_mscso.ui.list
 
+import android.util.Log
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
@@ -59,17 +60,39 @@ class ListViewModel() : ViewModel(), DefaultLifecycleObserver {
                     }
 
                     entryDbHelper.getEntries(user.watchlist.planning) { query ->
-                        _uiState.update {
-                            it.copy(planning = query.documents.mapNotNull {
-                                it.toObject(MediaEntry::class.java)
+                        _uiState.update {state ->
+                            state.copy(planning = query.documents.mapNotNull {
+                                val entry = it.toObject(MediaEntry::class.java)
+
+                                if(!_uiState.value.mediaLookup.contains(entry?.mediaUid) && entry?.mediaUid != null) {
+                                    mediaDbHelper.getMedia(entry.mediaUid) { doc ->
+                                        val media = doc.toObject(Media::class.java)
+                                        if(media != null) {
+                                            _uiState.value.mediaLookup[entry.mediaUid] = media
+                                        }
+                                    }
+                                }
+
+                                entry
                             })
                         }
                     }
 
                     entryDbHelper.getEntries(user.watchlist.watching) { query ->
-                        _uiState.update {
-                            it.copy(watching = query.documents.mapNotNull {
-                                it.toObject(MediaEntry::class.java)
+                        _uiState.update {state ->
+                            state.copy(watching = query.documents.mapNotNull {
+                                val entry = it.toObject(MediaEntry::class.java)
+
+                                if(!_uiState.value.mediaLookup.contains(entry?.mediaUid) && entry?.mediaUid != null) {
+                                    mediaDbHelper.getMedia(entry.mediaUid) { doc ->
+                                        val media = doc.toObject(Media::class.java)
+                                        if(media != null) {
+                                            _uiState.value.mediaLookup[entry.mediaUid] = media
+                                        }
+                                    }
+                                }
+
+                                entry
                             })
                         }
                     }
