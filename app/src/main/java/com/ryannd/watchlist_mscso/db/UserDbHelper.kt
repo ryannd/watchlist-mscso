@@ -7,6 +7,8 @@ import com.google.firebase.auth.auth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.QueryDocumentSnapshot
+import com.google.firebase.firestore.QuerySnapshot
 import com.ryannd.watchlist_mscso.db.model.MediaEntry
 import com.ryannd.watchlist_mscso.db.model.User
 import java.util.Locale
@@ -16,6 +18,17 @@ class UserDbHelper {
     private val rootCollection = "users"
     private val entryDbHelper = EntryDbHelper()
 
+    fun searchUsers(searchTerm: String, onComplete: (doc: QuerySnapshot) -> Unit) {
+       if (searchTerm != "") {
+           db.collection(rootCollection)
+               .whereGreaterThanOrEqualTo("userName", searchTerm)
+               .whereLessThan("userName", searchTerm + 'z')
+               .get().addOnSuccessListener {
+                   Log.d("UserDB", it.documents.toString())
+                   onComplete(it)
+               }
+       }
+    }
     fun getUserData(uuid: String, onComplete: (doc: DocumentSnapshot) -> Unit) {
         db.collection(rootCollection).document(uuid).get().addOnSuccessListener {
             onComplete(it)
@@ -51,6 +64,8 @@ class UserDbHelper {
                     Log.d("UserDB", "Updated watchlist")
                     onDismissRequest()
                 }
+
+                userRef.update("listLookup.${mediaUid}", it.id)
             }
         }
     }

@@ -21,7 +21,7 @@ import com.ryannd.watchlist_mscso.api.data.SearchResult
 import java.util.Locale
 
 @Composable
-fun SearchResult(
+fun MediaSearchResult(
     searchResult: SearchResult,
     navigateTo: (String) -> Unit
 ) {

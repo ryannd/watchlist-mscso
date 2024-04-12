@@ -22,7 +22,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class ListViewModel() : ViewModel(), DefaultLifecycleObserver {
+class ListViewModel : ViewModel(), DefaultLifecycleObserver {
     private val _uiState  = MutableStateFlow(ListUiState())
     private val userDbHelper = UserDbHelper()
     private val mediaDbHelper = MediaDbHelper()

@@ -11,11 +11,16 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Search
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.PrimaryTabRow
+import androidx.compose.material3.Tab
+import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.runtime.remember
@@ -25,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchScreen(
     searchViewModel: SearchViewModel = viewModel(),
@@ -32,25 +38,35 @@ fun SearchScreen(
 ) {
     val searchUiState by searchViewModel.uiState.collectAsState()
     var text by rememberSaveable { mutableStateOf("") }
-
+    var selected by remember { mutableIntStateOf(0) }
     Column {
-        Row {
-            TextField(
-                value = text,
-                onValueChange = {
-                    text = it
-                    searchViewModel.searchDebounced(it)
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(5.dp)
-                    .border(BorderStroke(1.dp, Color.Black), RoundedCornerShape(5.dp)),
-                trailingIcon = { Icon(imageVector = Icons.Outlined.Search, contentDescription = "Search Icon") }
-            )
+        TextField(
+            value = text,
+            onValueChange = {
+                text = it
+                when (selected) {
+                    0 -> searchViewModel.mediaSearchDebounced(it)
+                    1 -> searchViewModel.peopleSearchDebounced(it)
+                }
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(5.dp)
+                .border(BorderStroke(1.dp, Color.Black), RoundedCornerShape(5.dp)),
+            trailingIcon = { Icon(imageVector = Icons.Outlined.Search, contentDescription = "Search Icon") }
+        )
+        PrimaryTabRow(selectedTabIndex = selected) {
+            Tab(selected = selected == 0, onClick = { selected = 0 }, text = { Text(text = "Media") })
+            Tab(selected = selected == 1, onClick = { selected = 1 }, text = { Text(text = "People") })
         }
         LazyColumn {
-            items(searchUiState.searchResults) { searchResult ->
-                SearchResult(searchResult, navigateTo)
+            when (selected) {
+                0 -> items(searchUiState.mediaSearchResults) { searchResult ->
+                    MediaSearchResult(searchResult, navigateTo)
+                }
+                1 -> items(searchUiState.peopleSearchResults) { searchResult ->
+                    Text(searchResult.userName)
+                }
             }
         }
     }
