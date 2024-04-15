@@ -36,6 +36,13 @@ class UserDbHelper {
         }
     }
 
+    fun getUserData(onComplete: (doc: DocumentSnapshot) -> Unit) {
+        val userUid = Firebase.auth.currentUser?.uid
+        if(userUid != null) {
+            db.collection(rootCollection).document(userUid).get().addOnSuccessListener(onComplete)
+        }
+    }
+
     fun addNewUser(user: User) {
         db.collection(rootCollection).document(user.userUid).set(user)
     }
@@ -72,12 +79,18 @@ class UserDbHelper {
         }
     }
 
-    private fun updateUser(user: User, onSuccess: () -> Unit) {
+    fun updateUser(user: User, onSuccess: () -> Unit) {
         val userUid = Firebase.auth.currentUser?.uid
         if(userUid != null) {
             db.collection(rootCollection).document(userUid).set(user).addOnSuccessListener {
                 onSuccess()
             }
+        }
+    }
+
+    fun updateUser(uuid: String, user: User, onSuccess: () -> Unit) {
+        db.collection(rootCollection).document(uuid).set(user).addOnSuccessListener {
+            onSuccess()
         }
     }
 

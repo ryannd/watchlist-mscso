@@ -14,6 +14,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ExitToApp
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.outlined.ExitToApp
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -65,6 +68,16 @@ fun ProfileScreen(
                     if(id == "") {
                         IconButton(onClick = { profileViewModel.logout() }) {
                             Icon(imageVector = Icons.AutoMirrored.Outlined.ExitToApp , contentDescription = "Logout")
+                        }
+                    } else {
+                        if(!profileUiState.value.isFollowing) {
+                            IconButton(onClick = { profileViewModel.follow() }) {
+                                Icon(imageVector = Icons.Default.FavoriteBorder , contentDescription = "Follow")
+                            }
+                        } else {
+                            IconButton(onClick = { profileViewModel.unfollow() }) {
+                                Icon(imageVector = Icons.Default.Favorite, contentDescription = "Follow")
+                            }
                         }
                     }
                 }
