@@ -9,6 +9,7 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QueryDocumentSnapshot
 import com.google.firebase.firestore.QuerySnapshot
+import com.ryannd.watchlist_mscso.db.model.Media
 import com.ryannd.watchlist_mscso.db.model.MediaEntry
 import com.ryannd.watchlist_mscso.db.model.User
 import java.util.Locale
@@ -48,14 +49,15 @@ class UserDbHelper {
         }
     }
 
-    fun addMediaToList(mediaUid: String, type: String, status: String, onDismissRequest: () -> Unit) {
+    fun addMediaToList(media: Media, mediaUid: String, type: String, status: String, currEpisode: Int?, currSeason: Int?, rating: Int, onDismissRequest: () -> Unit) {
         val userUid = Firebase.auth.currentUser?.uid
         if(userUid != null) {
             val newMediaEntry = MediaEntry(
                 mediaUid = mediaUid,
                 status = status,
-                currentEpisode = if(type == "tv") 1 else null,
-                currentSeason = if(type == "tv") 1 else null,
+                currentEpisode = if(type == "tv") currEpisode else null,
+                currentSeason = if(type == "tv") currSeason else null,
+                rating = rating,
                 mediaType = type
             )
             val userRef = db.collection(rootCollection).document(userUid)
@@ -65,7 +67,34 @@ class UserDbHelper {
                     onDismissRequest()
                 }
 
-                userRef.update("listLookup.${mediaUid}", it.id)
+                userRef.update("listLookup.${media.tmdbId}", it.id)
+            }
+        }
+    }
+
+    private fun updateUser(user: User, onSuccess: () -> Unit) {
+        val userUid = Firebase.auth.currentUser?.uid
+        if(userUid != null) {
+            db.collection(rootCollection).document(userUid).set(user).addOnSuccessListener {
+                onSuccess()
+            }
+        }
+    }
+
+    fun deleteMediaFromList(entryId: String, status: String, tmdbId: String, onSuccess: () -> Unit) {
+        val userUid = Firebase.auth.currentUser?.uid
+        if(userUid != null) {
+            db.collection(rootCollection).document(userUid).get().addOnSuccessListener {
+                val user = it.toObject(User::class.java)?.copy()
+                if(user != null) {
+                    user.listLookup.remove(tmdbId)
+                    val list = user.watchlist[status]?.toMutableList()
+                    if(list != null) {
+                        list.removeAt(list.indexOf(entryId))
+                        user.watchlist[status] = list
+                    }
+                    updateUser(user, onSuccess)
+                }
             }
         }
     }

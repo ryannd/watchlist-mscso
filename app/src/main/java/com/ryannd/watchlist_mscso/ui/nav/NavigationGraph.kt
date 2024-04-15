@@ -16,7 +16,7 @@ import com.ryannd.watchlist_mscso.ui.search.SearchScreen
 fun NavigationGraph(navController: NavHostController, onComposing: (NavBarState) -> Unit) {
     NavHost(navController = navController, startDestination = Screens.ListScreen.route) {
         composable(Screens.ListScreen.route) {
-            ListScreen()
+            ListScreen(navigateTo = { navigateTo(it, navController) })
         }
         composable(Screens.Search.route) {
             SearchScreen(navigateTo = { navigateTo(it, navController) })

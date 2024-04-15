@@ -15,19 +15,20 @@ class MediaDbHelper {
             onComplete(it)
         }
     }
-    fun addNewMediaToList(newMedia: Media, status: String, onDismissRequest: () -> Unit) {
+    fun addNewMediaToList(newMedia: Media, status: String, currEpisode: Int?, currSeason: Int?, rating: Int, onDismissRequest: () -> Unit) {
         val tmdbId = newMedia.tmdbId
         db.collection(rootCollection).whereEqualTo("tmdbId", tmdbId).get().addOnSuccessListener { querySnapshot ->
             if(querySnapshot.documents.isEmpty()) {
                 db.collection(rootCollection).add(newMedia).addOnSuccessListener {document ->
                     document.get().addOnSuccessListener {
-                        userDb.addMediaToList(it.id, newMedia.type, status, onDismissRequest)
+                        userDb.addMediaToList(newMedia, it.id, newMedia.type, status, currEpisode, currSeason, rating, onDismissRequest)
                     }
                     Log.d("MediaDB", "Added new media ${newMedia.title}")
                 }
             } else {
                 for (document in querySnapshot) {
-                    userDb.addMediaToList(document.id, newMedia.type, status, onDismissRequest)
+                    val media = document.toObject(Media::class.java)
+                    userDb.addMediaToList(media, document.id, newMedia.type, status, currEpisode, currSeason, rating, onDismissRequest)
                     break
                 }
             }

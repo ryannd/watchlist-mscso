@@ -15,7 +15,7 @@ data class ShowDetail(
     @SerializedName("poster_path")
     val posterUrl: String,
     @SerializedName("seasons")
-    val seasons: List<Season>,
+    val seasons: List<Seasons>,
     @SerializedName("number_of_seasons")
     val numSeasons: Int
 )

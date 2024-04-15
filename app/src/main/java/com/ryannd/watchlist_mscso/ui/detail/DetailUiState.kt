@@ -1,5 +1,7 @@
 package com.ryannd.watchlist_mscso.ui.detail
 
+import com.ryannd.watchlist_mscso.api.data.Seasons
+import com.ryannd.watchlist_mscso.db.model.MediaEntry
 import com.ryannd.watchlist_mscso.db.model.Season
 
 data class DetailUiState(
@@ -10,7 +12,8 @@ data class DetailUiState(
     var posterUrl: String = "",
     var releaseDate: String? = null,
     var runtime: Int? = null,
-    var seasons: List<Season>? = null,
+    var seasons: List<Seasons>? = null,
     var numSeasons: Int? = null,
-    var tmdbId: String = ""
+    var tmdbId: String = "",
+    var userEntry: MediaEntry? = null
 )

@@ -12,6 +12,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -51,7 +52,16 @@ fun DetailScreen(
     val showAddDialog = remember { mutableStateOf(false) }
 
     if(showAddDialog.value) {
-        AddMediaDialog(mediaType = mediaType, stateObj = uiState, onDismissRequest = { showAddDialog.value = false })
+        MediaDialog(
+            mediaType = mediaType,
+            stateObj = uiState,
+            onDismissRequest = {
+                showAddDialog.value = false
+                viewModel.updateEntry()
+            },
+            onAdd = viewModel::addToList,
+            onEdit = viewModel::editEntry,
+            onDelete = viewModel::deleteEntry)
     }
 
     Scaffold(
@@ -61,7 +71,11 @@ fun DetailScreen(
                     showAddDialog.value = true
                 },
             ) {
-                Icon(Icons.Filled.Add, "Floating action button.")
+                if(uiState.userEntry != null) {
+                     Icon(imageVector = Icons.Filled.Edit, contentDescription = "edit")
+                } else {
+                    Icon(Icons.Filled.Add, "Floating action button.")
+                }
             }
         }
     ) {

@@ -1,5 +1,6 @@
 package com.ryannd.watchlist_mscso.ui.list
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -15,6 +16,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -23,7 +25,8 @@ import com.ryannd.watchlist_mscso.ui.detail.ObserveLifecycle
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListScreen(
-    listViewModel: ListViewModel = viewModel()
+    listViewModel: ListViewModel = viewModel(),
+    navigateTo: (String) -> Unit
 ) {
     var selected by remember { mutableIntStateOf(0) }
     val titles = listOf("Planning", "Watching", "Completed")
@@ -55,7 +58,9 @@ fun ListScreen(
             items(currentList ?: listOf()) {
                 val media = listUiState.value.mediaLookup[it.mediaUid]
                 if(media != null) {
-                    Text(text = media.title)
+                    Text(text = media.title, modifier = Modifier.clickable {
+                        navigateTo("detail_screen/id=${media.tmdbId}&type=${media.type}")
+                    })
                 }
             }
         }

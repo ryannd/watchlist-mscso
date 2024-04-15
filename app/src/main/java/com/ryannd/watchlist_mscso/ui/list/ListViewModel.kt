@@ -40,62 +40,68 @@ class ListViewModel : ViewModel(), DefaultLifecycleObserver {
             userDbHelper.getUserData(uuid) {
                 val user = it.toObject(User::class.java)
                 if(user != null) {
-                    entryDbHelper.getEntries(user.watchlist.completed) { query ->
-                        _uiState.update {state ->
-                            state.copy(completed = query.documents.mapNotNull {
-                                val entry = it.toObject(MediaEntry::class.java)
+                    if(user.watchlist.completed.isNotEmpty()) {
+                        entryDbHelper.getEntries(user.watchlist.completed) { query ->
+                            _uiState.update {state ->
+                                state.copy(completed = query.documents.mapNotNull {
+                                    val entry = it.toObject(MediaEntry::class.java)
 
-                                if(!_uiState.value.mediaLookup.contains(entry?.mediaUid) && entry?.mediaUid != null) {
-                                    mediaDbHelper.getMedia(entry.mediaUid) { doc ->
-                                        val media = doc.toObject(Media::class.java)
-                                        if(media != null) {
-                                            _uiState.value.mediaLookup[entry.mediaUid] = media
+                                    if(!_uiState.value.mediaLookup.contains(entry?.mediaUid) && entry?.mediaUid != null) {
+                                        mediaDbHelper.getMedia(entry.mediaUid) { doc ->
+                                            val media = doc.toObject(Media::class.java)
+                                            if(media != null) {
+                                                _uiState.value.mediaLookup[entry.mediaUid] = media
+                                            }
                                         }
                                     }
-                                }
 
-                                entry
-                            })
+                                    entry
+                                })
+                            }
                         }
                     }
 
-                    entryDbHelper.getEntries(user.watchlist.planning) { query ->
-                        _uiState.update {state ->
-                            state.copy(planning = query.documents.mapNotNull {
-                                val entry = it.toObject(MediaEntry::class.java)
+                   if(user.watchlist.planning.isNotEmpty()) {
+                       entryDbHelper.getEntries(user.watchlist.planning) { query ->
+                           _uiState.update {state ->
+                               state.copy(planning = query.documents.mapNotNull {
+                                   val entry = it.toObject(MediaEntry::class.java)
 
-                                if(!_uiState.value.mediaLookup.contains(entry?.mediaUid) && entry?.mediaUid != null) {
-                                    mediaDbHelper.getMedia(entry.mediaUid) { doc ->
-                                        val media = doc.toObject(Media::class.java)
-                                        if(media != null) {
-                                            _uiState.value.mediaLookup[entry.mediaUid] = media
-                                        }
-                                    }
-                                }
+                                   if(!_uiState.value.mediaLookup.contains(entry?.mediaUid) && entry?.mediaUid != null) {
+                                       mediaDbHelper.getMedia(entry.mediaUid) { doc ->
+                                           val media = doc.toObject(Media::class.java)
+                                           if(media != null) {
+                                               _uiState.value.mediaLookup[entry.mediaUid] = media
+                                           }
+                                       }
+                                   }
 
-                                entry
-                            })
-                        }
-                    }
+                                   entry
+                               })
+                           }
+                       }
+                   }
 
-                    entryDbHelper.getEntries(user.watchlist.watching) { query ->
-                        _uiState.update {state ->
-                            state.copy(watching = query.documents.mapNotNull {
-                                val entry = it.toObject(MediaEntry::class.java)
+                   if(user.watchlist.watching.isNotEmpty()) {
+                       entryDbHelper.getEntries(user.watchlist.watching) { query ->
+                           _uiState.update {state ->
+                               state.copy(watching = query.documents.mapNotNull {
+                                   val entry = it.toObject(MediaEntry::class.java)
 
-                                if(!_uiState.value.mediaLookup.contains(entry?.mediaUid) && entry?.mediaUid != null) {
-                                    mediaDbHelper.getMedia(entry.mediaUid) { doc ->
-                                        val media = doc.toObject(Media::class.java)
-                                        if(media != null) {
-                                            _uiState.value.mediaLookup[entry.mediaUid] = media
-                                        }
-                                    }
-                                }
+                                   if(!_uiState.value.mediaLookup.contains(entry?.mediaUid) && entry?.mediaUid != null) {
+                                       mediaDbHelper.getMedia(entry.mediaUid) { doc ->
+                                           val media = doc.toObject(Media::class.java)
+                                           if(media != null) {
+                                               _uiState.value.mediaLookup[entry.mediaUid] = media
+                                           }
+                                       }
+                                   }
 
-                                entry
-                            })
-                        }
-                    }
+                                   entry
+                               })
+                           }
+                       }
+                   }
                 }
             }
         }

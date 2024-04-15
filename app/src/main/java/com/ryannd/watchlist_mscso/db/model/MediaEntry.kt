@@ -8,5 +8,6 @@ data class MediaEntry(
     val status: String = "",
     val currentEpisode: Int? = null,
     val currentSeason: Int? = null,
+    val rating: Int = 0,
     @DocumentId var firestoreID: String = ""
 )
