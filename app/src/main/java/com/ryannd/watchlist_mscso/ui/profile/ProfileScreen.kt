@@ -36,10 +36,15 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.ryannd.watchlist_mscso.R
 import com.ryannd.watchlist_mscso.ui.detail.ObserveLifecycle
+import com.ryannd.watchlist_mscso.ui.nav.NavBarState
+import com.ryannd.watchlist_mscso.ui.nav.navigateTo
 
 @Composable
 fun ProfileScreen(
-    profileViewModel: ProfileViewModel = viewModel()
+    id: String,
+    onComposing: (NavBarState) -> Unit,
+    navigateTo: (String) -> Unit,
+    profileViewModel: ProfileViewModel = viewModel(factory = ProfileViewModelFactory(id, onComposing)),
 ) {
     val profileUiState = profileViewModel.uiState.collectAsState()
     profileViewModel.ObserveLifecycle(LocalLifecycleOwner.current.lifecycle)
@@ -51,12 +56,16 @@ fun ProfileScreen(
             .fillMaxWidth()
             .height(300.dp)) {
             Column (modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
-                Row (modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)) {
+                Row (
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp)
+                ) {
                     Spacer(modifier = Modifier.weight(1f))
-                    IconButton(onClick = { Firebase.auth.signOut() }) {
-                        Icon(imageVector = Icons.AutoMirrored.Outlined.ExitToApp , contentDescription = "Logout")
+                    if(id == "") {
+                        IconButton(onClick = { profileViewModel.logout() }) {
+                            Icon(imageVector = Icons.AutoMirrored.Outlined.ExitToApp , contentDescription = "Logout")
+                        }
                     }
                 }
 
@@ -69,6 +78,16 @@ fun ProfileScreen(
                 Spacer(modifier = Modifier.height(20.dp))
                 Text(text = profileUiState.value.user?.userName ?: "Please login.")
             }
+        }
+
+        Button(
+            onClick = {
+                navigateTo("list_screen?id=${id}")
+            },
+            modifier = Modifier.fillMaxWidth()
+        )
+        {
+            Text(text = "Watchlist")
         }
     }
 }

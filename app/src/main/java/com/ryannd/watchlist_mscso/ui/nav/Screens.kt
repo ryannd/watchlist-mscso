@@ -12,7 +12,7 @@ sealed class Screens (
     val onBar: Boolean = false
 ) {
     object ListScreen : Screens (
-        route = "list_screen",
+        route = "list_screen?id={id}",
         title = "Watchlist",
         icon = Icons.AutoMirrored.Outlined.List,
         onBar = true
@@ -26,7 +26,7 @@ sealed class Screens (
     )
 
     object Profile : Screens (
-        route = "profile_screen",
+        route = "user?id={id}",
         title = "Profile",
         icon = Icons.Outlined.Search,
         onBar = true

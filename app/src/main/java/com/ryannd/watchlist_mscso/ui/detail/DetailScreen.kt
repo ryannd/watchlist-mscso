@@ -43,7 +43,6 @@ fun DetailScreen(
     id: String,
     onComposing: (NavBarState) -> Unit,
     viewModel: DetailViewModel = viewModel(factory = DetailViewModelFactory(mediaType, id, onComposing)),
-
 ) {
     viewModel.ObserveLifecycle(LocalLifecycleOwner.current.lifecycle)
 

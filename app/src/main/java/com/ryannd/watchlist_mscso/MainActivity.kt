@@ -48,7 +48,7 @@ class MainActivity : ComponentActivity() {
             }
 
             WatchlistmscsoTheme {
-                val navController: NavHostController = rememberNavController()
+                val navController = rememberNavController()
                 var navBarState by remember {
                     mutableStateOf(NavBarState())
                 }

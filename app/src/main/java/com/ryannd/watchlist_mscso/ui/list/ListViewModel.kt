@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
@@ -15,6 +16,8 @@ import com.ryannd.watchlist_mscso.db.model.Media
 import com.ryannd.watchlist_mscso.db.model.MediaEntry
 import com.ryannd.watchlist_mscso.db.model.User
 import com.ryannd.watchlist_mscso.ui.detail.DetailUiState
+import com.ryannd.watchlist_mscso.ui.nav.NavBarState
+import com.ryannd.watchlist_mscso.ui.profile.ProfileViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -22,7 +25,10 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class ListViewModel : ViewModel(), DefaultLifecycleObserver {
+class ListViewModel(
+    private val id: String,
+    private val onComposing: (NavBarState) -> Unit
+) : ViewModel(), DefaultLifecycleObserver {
     private val _uiState  = MutableStateFlow(ListUiState())
     private val userDbHelper = UserDbHelper()
     private val mediaDbHelper = MediaDbHelper()
@@ -35,7 +41,12 @@ class ListViewModel : ViewModel(), DefaultLifecycleObserver {
     }
 
     private fun fetchLists() {
-        val uuid = Firebase.auth.currentUser?.uid
+        val uuid: String? = if(id == "") {
+            Firebase.auth.currentUser?.uid
+        } else {
+            id
+        }
+
         if(uuid != null) {
             userDbHelper.getUserData(uuid) {
                 val user = it.toObject(User::class.java)
@@ -102,8 +113,16 @@ class ListViewModel : ViewModel(), DefaultLifecycleObserver {
                            }
                        }
                    }
+                    if(id != "") {
+                        onComposing(NavBarState(title = "${user.userName}'s Watchlist", showTopBar = true))
+                    }
                 }
             }
         }
     }
+}
+
+class ListViewModelFactory(private val id: String, private val onComposing: (NavBarState) -> Unit) :
+    ViewModelProvider.NewInstanceFactory() {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T = ListViewModel(id, onComposing) as T
 }

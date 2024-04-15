@@ -21,12 +21,15 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ryannd.watchlist_mscso.ui.detail.ObserveLifecycle
+import com.ryannd.watchlist_mscso.ui.nav.NavBarState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListScreen(
-    listViewModel: ListViewModel = viewModel(),
-    navigateTo: (String) -> Unit
+    id: String,
+    onComposing: (NavBarState) -> Unit,
+    navigateTo: (String) -> Unit,
+    listViewModel: ListViewModel = viewModel(factory = ListViewModelFactory(id, onComposing)),
 ) {
     var selected by remember { mutableIntStateOf(0) }
     val titles = listOf("Planning", "Watching", "Completed")

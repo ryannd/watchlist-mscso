@@ -14,15 +14,39 @@ import com.ryannd.watchlist_mscso.ui.search.SearchScreen
 
 @Composable
 fun NavigationGraph(navController: NavHostController, onComposing: (NavBarState) -> Unit) {
-    NavHost(navController = navController, startDestination = Screens.ListScreen.route) {
-        composable(Screens.ListScreen.route) {
-            ListScreen(navigateTo = { navigateTo(it, navController) })
+    NavHost(navController = navController, startDestination = "list_screen?id={id}") {
+        composable(
+            route = "list_screen?id={id}",
+            arguments = listOf(
+                navArgument("id") {
+                    nullable = true
+                    defaultValue = ""
+                    type = NavType.StringType
+                }
+            )
+        ) {
+            val arguments = requireNotNull(it.arguments)
+            val id = arguments.getString("id") ?: ""
+
+            ListScreen(id = id, onComposing = onComposing, navigateTo = { navigateTo(it, navController) })
         }
         composable(Screens.Search.route) {
             SearchScreen(navigateTo = { navigateTo(it, navController) })
         }
-        composable(Screens.Profile.route) {
-            ProfileScreen()
+        composable(
+            route = "user?id={id}",
+            arguments = listOf(
+                navArgument("id") {
+                    nullable = true
+                    defaultValue = ""
+                    type = NavType.StringType
+                }
+            )
+        ) {
+            val arguments = requireNotNull(it.arguments)
+            val id = arguments.getString("id") ?: ""
+
+            ProfileScreen(id, onComposing, { navigateTo(it, navController) })
         }
         composable(
             route = Screens.Detail.route,

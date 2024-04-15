@@ -38,7 +38,7 @@ fun SearchScreen(
 ) {
     val searchUiState by searchViewModel.uiState.collectAsState()
     var text by rememberSaveable { mutableStateOf("") }
-    var selected by remember { mutableIntStateOf(0) }
+    var selected by rememberSaveable { mutableIntStateOf(0) }
     Column {
         TextField(
             value = text,
@@ -65,7 +65,7 @@ fun SearchScreen(
                     MediaSearchResult(searchResult, navigateTo)
                 }
                 1 -> items(searchUiState.peopleSearchResults) { searchResult ->
-                    Text(searchResult.userName)
+                    PeopleSearchResult(result = searchResult, navigateTo)
                 }
             }
         }
