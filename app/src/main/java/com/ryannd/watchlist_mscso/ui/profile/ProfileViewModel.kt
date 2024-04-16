@@ -9,7 +9,10 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import com.google.firebase.firestore.toObject
+import com.ryannd.watchlist_mscso.db.ReviewDbHelper
 import com.ryannd.watchlist_mscso.db.UserDbHelper
+import com.ryannd.watchlist_mscso.db.model.Review
 import com.ryannd.watchlist_mscso.db.model.User
 import com.ryannd.watchlist_mscso.ui.detail.DetailViewModel
 import com.ryannd.watchlist_mscso.ui.nav.NavBarState
@@ -24,6 +27,7 @@ class ProfileViewModel(
 ) : ViewModel(), DefaultLifecycleObserver {
     private val _uiState = MutableStateFlow(ProfileUiState())
     private val userDbHelper = UserDbHelper()
+    private val reviewDbHelper = ReviewDbHelper()
     val uiState: StateFlow<ProfileUiState> = _uiState.asStateFlow()
 
     private val firebaseAuthListener = FirebaseAuth.AuthStateListener {
@@ -125,6 +129,27 @@ class ProfileViewModel(
                 Log.d("ProfileViewModel", user.toString())
                 if(user != null) {
                     _uiState.value = ProfileUiState(user = user)
+
+                    val reviews = user.reviewLookup.keys.toList()
+                    Log.d("Reviewer", user.reviewLookup.toString())
+                    if(reviews.isNotEmpty()) {
+                        reviewDbHelper.getReview(user.userUid, reviews) {
+                            val review = it.toObject(Review::class.java)
+                            if(review != null) {
+                                val added = _uiState.value.reviews.toMutableList()
+                                if(added.indexOf(review) == -1) {
+                                    added.add(review)
+                                    _uiState.update {
+                                        it.copy(
+                                            reviews = added
+                                        )
+                                    }
+                                }
+
+                            }
+                        }
+                    }
+
                     if(id != "") {
                         userDbHelper.getUserData {
                             val currUser = it.toObject(User::class.java)

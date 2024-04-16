@@ -11,7 +11,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ExitToApp
 import androidx.compose.material.icons.filled.Add
@@ -52,9 +54,14 @@ fun ProfileScreen(
     val profileUiState = profileViewModel.uiState.collectAsState()
     profileViewModel.ObserveLifecycle(LocalLifecycleOwner.current.lifecycle)
 
-    Column (modifier = Modifier
-        .padding(10.dp)
-        .fillMaxWidth(), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
+    Column (
+        modifier = Modifier
+            .padding(10.dp)
+            .fillMaxWidth()
+            .verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         ElevatedCard (modifier = Modifier
             .fillMaxWidth()
             .height(300.dp)) {
@@ -93,6 +100,8 @@ fun ProfileScreen(
             }
         }
 
+        Spacer(modifier = Modifier.height(20.dp))
+
         Button(
             onClick = {
                 navigateTo("list_screen?id=${id}")
@@ -102,5 +111,9 @@ fun ProfileScreen(
         {
             Text(text = "Watchlist")
         }
+
+        Spacer(modifier = Modifier.height(20.dp))
+        
+        ReviewSection(reviews = profileUiState.value.reviews)
     }
 }

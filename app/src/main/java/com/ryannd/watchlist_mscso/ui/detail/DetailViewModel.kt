@@ -46,7 +46,9 @@ class DetailViewModel(private val type: String, private val id: String, private 
             title = title,
             tmdbId = stateObj.tmdbId,
             liked = liked,
-            userName = stateObj.userName
+            userName = stateObj.userName,
+            mediaTitle = stateObj.title,
+            poster = stateObj.posterUrl
         )
 
         reviewDb.addReview(review, onComplete)
@@ -119,7 +121,6 @@ class DetailViewModel(private val type: String, private val id: String, private 
                                 }
                             }
                         }
-
                     } else {
                         _uiState.update {
                             it.copy(userEntry = null)
@@ -133,11 +134,11 @@ class DetailViewModel(private val type: String, private val id: String, private 
                                 _uiState.update {
                                     it.copy(userReview = review)
                                 }
-                            } else {
-                                _uiState.update {
-                                    it.copy(userReview = null)
-                                }
                             }
+                        }
+                    } else {
+                        _uiState.update {
+                            it.copy(userReview = null)
                         }
                     }
                 }

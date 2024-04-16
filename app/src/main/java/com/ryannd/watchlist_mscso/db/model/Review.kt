@@ -9,5 +9,7 @@ data class Review(
     val liked: Boolean = false,
     val text: String = "",
     val title: String = "",
+    val poster: String = "",
+    val mediaTitle: String = "",
     @DocumentId var firestoreID: String = ""
 )

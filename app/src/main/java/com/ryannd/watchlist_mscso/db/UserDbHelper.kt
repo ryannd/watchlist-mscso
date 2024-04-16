@@ -9,6 +9,7 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QueryDocumentSnapshot
 import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.firestore.firestore
 import com.ryannd.watchlist_mscso.db.model.Media
 import com.ryannd.watchlist_mscso.db.model.MediaEntry
 import com.ryannd.watchlist_mscso.db.model.Review
@@ -69,7 +70,7 @@ class UserDbHelper {
     fun deleteReviewFromUser(review: Review, onComplete: () -> Unit) {
         val userUid = Firebase.auth.currentUser?.uid
         if(userUid != null) {
-            db.collection(rootCollection).document(userUid).update("reviewLookup.${review.tmdbId}", false).addOnSuccessListener {
+            db.collection(rootCollection).document(userUid).update("reviewLookup.${review.tmdbId}", FieldValue.delete()).addOnSuccessListener {
                 onComplete()
             }
         }

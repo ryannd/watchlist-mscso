@@ -25,4 +25,10 @@ class ReviewDbHelper {
             onComplete(it)
         }
     }
+
+    fun getReview(userUid: String, idList: List<String>, onComplete: (doc: DocumentSnapshot) -> Unit) {
+        for (id in idList) {
+            getReview(userUid, id, onComplete)
+        }
+    }
 }
