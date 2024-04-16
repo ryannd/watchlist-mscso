@@ -1,11 +1,13 @@
 package com.ryannd.watchlist_mscso.ui.profile
 
 import android.util.Log
+import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.ryannd.watchlist_mscso.db.UserDbHelper
 import com.ryannd.watchlist_mscso.db.model.User
@@ -24,6 +26,13 @@ class ProfileViewModel(
     private val userDbHelper = UserDbHelper()
     val uiState: StateFlow<ProfileUiState> = _uiState.asStateFlow()
 
+    private val firebaseAuthListener = FirebaseAuth.AuthStateListener {
+        fetchUser()
+    }
+    override fun onStart(owner: LifecycleOwner) {
+        super.onStart(owner)
+        Firebase.auth.addAuthStateListener(firebaseAuthListener)
+    }
     override fun onCreate(owner: LifecycleOwner) {
         super.onCreate(owner)
         fetchUser()
