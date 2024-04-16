@@ -8,9 +8,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.ryannd.watchlist_mscso.ui.detail.DetailScreen
-import com.ryannd.watchlist_mscso.ui.list.ListScreen
 import com.ryannd.watchlist_mscso.ui.profile.ProfileScreen
 import com.ryannd.watchlist_mscso.ui.search.SearchScreen
+import com.ryannd.watchlist_mscso.ui.watchlist.WatchlistScreen
 
 @Composable
 fun NavigationGraph(navController: NavHostController, onComposing: (NavBarState) -> Unit) {
@@ -28,7 +28,7 @@ fun NavigationGraph(navController: NavHostController, onComposing: (NavBarState)
             val arguments = requireNotNull(it.arguments)
             val id = arguments.getString("id") ?: ""
 
-            ListScreen(id = id, onComposing = onComposing, navigateTo = { navigateTo(it, navController) })
+            WatchlistScreen(id = id, onComposing = onComposing, navigateTo = { navigateTo(it, navController) })
         }
         composable(Screens.Search.route) {
             SearchScreen(navigateTo = { navigateTo(it, navController) })
