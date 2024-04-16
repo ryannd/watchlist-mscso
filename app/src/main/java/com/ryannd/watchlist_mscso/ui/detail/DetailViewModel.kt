@@ -12,9 +12,11 @@ import com.google.firebase.firestore.toObject
 import com.ryannd.watchlist_mscso.api.TmdbApi
 import com.ryannd.watchlist_mscso.db.EntryDbHelper
 import com.ryannd.watchlist_mscso.db.MediaDbHelper
+import com.ryannd.watchlist_mscso.db.ReviewDbHelper
 import com.ryannd.watchlist_mscso.db.UserDbHelper
 import com.ryannd.watchlist_mscso.db.model.Media
 import com.ryannd.watchlist_mscso.db.model.MediaEntry
+import com.ryannd.watchlist_mscso.db.model.Review
 import com.ryannd.watchlist_mscso.db.model.Season
 import com.ryannd.watchlist_mscso.db.model.User
 import com.ryannd.watchlist_mscso.ui.nav.NavBarState
@@ -31,9 +33,29 @@ class DetailViewModel(private val type: String, private val id: String, private 
     private val userDb = UserDbHelper()
     private val mediaDb = MediaDbHelper()
     private val entryDb = EntryDbHelper()
+    private val reviewDb = ReviewDbHelper()
     override fun onCreate(owner: LifecycleOwner) {
         super.onCreate(owner)
         getDetails()
+    }
+
+    fun addReview(stateObj: DetailUiState, title: String, text: String, liked: Boolean, onComplete: () -> Unit) {
+        val review = Review(
+            userUid = Firebase.auth.currentUser?.uid ?: "",
+            text = text,
+            title = title,
+            tmdbId = stateObj.tmdbId,
+            liked = liked,
+            userName = stateObj.userName
+        )
+
+        reviewDb.addReview(review, onComplete)
+    }
+
+    fun deleteReview(stateObj: DetailUiState, onComplete: () -> Unit) {
+        if(stateObj.userReview != null) {
+            reviewDb.deleteReview(stateObj.userReview!!, onComplete)
+        }
     }
 
     fun addToList(stateObj: DetailUiState, status: String, currEpisode: String, currSeason: String, rating: Int, onDismissRequest: () -> Unit) {
@@ -82,6 +104,9 @@ class DetailViewModel(private val type: String, private val id: String, private 
             userDb.getUserData(uuid) {
                 val user = it.toObject(User::class.java)
                 if(user != null) {
+                    _uiState.update {state ->
+                        state.copy(userName = user.userName)
+                    }
                     if(user.listLookup.contains(_uiState.value.tmdbId)) {
                         val entryId = user.listLookup[_uiState.value.tmdbId]
                         if(entryId != null) {
@@ -98,6 +123,21 @@ class DetailViewModel(private val type: String, private val id: String, private 
                     } else {
                         _uiState.update {
                             it.copy(userEntry = null)
+                        }
+                    }
+
+                    if(user.reviewLookup.contains(_uiState.value.tmdbId)) {
+                        reviewDb.getReview(user.userUid, _uiState.value.tmdbId) {
+                            val review = it.toObject(Review::class.java)
+                            if(review != null) {
+                                _uiState.update {
+                                    it.copy(userReview = review)
+                                }
+                            } else {
+                                _uiState.update {
+                                    it.copy(userReview = null)
+                                }
+                            }
                         }
                     }
                 }

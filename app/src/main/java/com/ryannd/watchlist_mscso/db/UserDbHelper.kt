@@ -11,6 +11,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot
 import com.google.firebase.firestore.QuerySnapshot
 import com.ryannd.watchlist_mscso.db.model.Media
 import com.ryannd.watchlist_mscso.db.model.MediaEntry
+import com.ryannd.watchlist_mscso.db.model.Review
 import com.ryannd.watchlist_mscso.db.model.User
 import java.util.Locale
 
@@ -52,6 +53,24 @@ class UserDbHelper {
             Log.d("UserDB", document.toString())
             if(!document.exists()) {
                 isAlertShowing.value = true
+            }
+        }
+    }
+
+    fun addReviewToUser(review: Review, onComplete: () -> Unit) {
+        val userUid = Firebase.auth.currentUser?.uid
+        if(userUid != null) {
+            db.collection(rootCollection).document(userUid).update("reviewLookup.${review.tmdbId}", true).addOnSuccessListener {
+                onComplete()
+            }
+        }
+    }
+
+    fun deleteReviewFromUser(review: Review, onComplete: () -> Unit) {
+        val userUid = Firebase.auth.currentUser?.uid
+        if(userUid != null) {
+            db.collection(rootCollection).document(userUid).update("reviewLookup.${review.tmdbId}", false).addOnSuccessListener {
+                onComplete()
             }
         }
     }

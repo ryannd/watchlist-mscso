@@ -9,5 +9,6 @@ data class User(
     val watchlist: Watchlist = Watchlist(),
     val userUid: String = "",
     val listLookup: HashMap<String, String> = HashMap(),
+    val reviewLookup: HashMap<String, Boolean> = HashMap(),
     @DocumentId var firestoreID: String = ""
 )
