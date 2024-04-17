@@ -150,6 +150,40 @@ class ProfileViewModel(
                         }
                     }
 
+                    if(user.followingList.isNotEmpty()) {
+                        userDbHelper.getUserData(user.followingList) {
+                            val following = it.toObject(User::class.java)
+                            if(following != null) {
+                                val added = _uiState.value.following.toMutableList()
+                                if(added.indexOf(following) == -1) {
+                                    added.add(following)
+                                    _uiState.update {
+                                        it.copy(
+                                            following = added
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    if(user.followerList.isNotEmpty()) {
+                        userDbHelper.getUserData(user.followerList) {
+                            val follower = it.toObject(User::class.java)
+                            if(follower != null) {
+                                val added = _uiState.value.following.toMutableList()
+                                if(added.indexOf(follower) == -1) {
+                                    added.add(follower)
+                                    _uiState.update {
+                                        it.copy(
+                                            following = added
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+
                     if(id != "") {
                         userDbHelper.getUserData {
                             val currUser = it.toObject(User::class.java)

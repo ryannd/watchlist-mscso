@@ -131,7 +131,7 @@ fun ReviewSection(reviews: List<Review>) {
                                 horizontalArrangement = Arrangement.SpaceBetween,
                                 modifier = Modifier.fillMaxWidth()
                             ) {
-                                Text(text = curr.title, fontWeight = FontWeight.Bold, fontSize = 20.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                                Text(text = curr.title, fontWeight = FontWeight.Bold, fontSize = 20.sp, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.width(100.dp))
                                 if(curr.liked){
                                     Icon(imageVector = ThumbsUp, contentDescription = "Liked", modifier = Modifier.size(25.dp))
                                 } else {

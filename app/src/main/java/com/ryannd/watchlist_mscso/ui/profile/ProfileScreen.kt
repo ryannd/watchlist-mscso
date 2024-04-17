@@ -1,5 +1,6 @@
 package com.ryannd.watchlist_mscso.ui.profile
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -53,7 +54,7 @@ fun ProfileScreen(
 ) {
     val profileUiState = profileViewModel.uiState.collectAsState()
     profileViewModel.ObserveLifecycle(LocalLifecycleOwner.current.lifecycle)
-
+    Log.d("PROFILE", profileUiState.value.toString())
     Column (
         modifier = Modifier
             .padding(10.dp)
@@ -115,5 +116,17 @@ fun ProfileScreen(
         Spacer(modifier = Modifier.height(20.dp))
         
         ReviewSection(reviews = profileUiState.value.reviews)
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        Text(text = "Following")
+
+        UserSection(users = profileUiState.value.following, navigateTo = navigateTo)
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        Text(text = "Followers")
+
+        UserSection(users = profileUiState.value.followers, navigateTo = navigateTo)
     }
 }

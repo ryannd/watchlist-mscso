@@ -45,6 +45,12 @@ class UserDbHelper {
         }
     }
 
+    fun getUserData(list: List<String>, onComplete: (doc: DocumentSnapshot) -> Unit) {
+        for(userId in list) {
+            getUserData(userId, onComplete)
+        }
+    }
+
     fun addNewUser(user: User) {
         db.collection(rootCollection).document(user.userUid).set(user)
     }
