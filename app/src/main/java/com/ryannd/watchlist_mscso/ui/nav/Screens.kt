@@ -2,6 +2,8 @@ package com.ryannd.watchlist_mscso.ui.nav
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.List
+import androidx.compose.material.icons.filled.Create
+import androidx.compose.material.icons.outlined.Face
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.ui.graphics.vector.ImageVector
 
@@ -11,8 +13,8 @@ sealed class Screens (
     val icon: ImageVector? = null,
     val onBar: Boolean = false
 ) {
-    object ListScreen : Screens (
-        route = "list_screen?id={id}",
+    object WatchlistScreen : Screens (
+        route = "watchlist_screen?id={id}",
         title = "Watchlist",
         icon = Icons.AutoMirrored.Outlined.List,
         onBar = true
@@ -25,10 +27,22 @@ sealed class Screens (
         onBar = true
     )
 
+    object ListDetail : Screens (
+        route = "list/detail?id={id}",
+        title = "List Detail"
+    )
+
+    object List : Screens (
+        route = "list",
+        title = "Lists",
+        icon = Icons.Default.Create,
+        onBar = true
+    )
+
     object Profile : Screens (
         route = "user?id={id}",
         title = "Profile",
-        icon = Icons.Outlined.Search,
+        icon = Icons.Outlined.Face,
         onBar = true
     )
 

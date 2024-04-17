@@ -54,7 +54,7 @@ fun ProfileScreen(
 ) {
     val profileUiState = profileViewModel.uiState.collectAsState()
     profileViewModel.ObserveLifecycle(LocalLifecycleOwner.current.lifecycle)
-    Log.d("PROFILE", profileUiState.value.toString())
+
     Column (
         modifier = Modifier
             .padding(10.dp)

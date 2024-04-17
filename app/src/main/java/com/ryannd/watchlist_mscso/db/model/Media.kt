@@ -1,7 +1,6 @@
 package com.ryannd.watchlist_mscso.db.model
 
 import com.google.firebase.firestore.DocumentId
-import com.ryannd.watchlist_mscso.api.data.Seasons
 
 data class Media(
     var title: String = "",

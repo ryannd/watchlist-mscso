@@ -28,6 +28,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.google.firebase.Firebase
+import com.google.firebase.auth.UserProfileChangeRequest
+import com.google.firebase.auth.auth
 import com.ryannd.watchlist_mscso.auth.FirebaseAuthenticator
 import com.ryannd.watchlist_mscso.db.model.User
 import com.ryannd.watchlist_mscso.ui.nav.BottomNavigationBar
@@ -84,7 +87,12 @@ class MainActivity : ComponentActivity() {
                                                     userUid = authenticator.user()!!.uid
                                                 )
                                                 authenticator.userDbHelper.addNewUser(newUser)
-                                                isAlertShowing.value = false
+                                                val profileUpdate = UserProfileChangeRequest.Builder()
+                                                    .setDisplayName(userName)
+                                                    .build()
+                                                authenticator.user()!!.updateProfile(profileUpdate).addOnCompleteListener {
+                                                    isAlertShowing.value = false
+                                                }
                                             }
                                         }
                                     ) {

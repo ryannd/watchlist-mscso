@@ -20,7 +20,7 @@ fun BottomNavigationBar(
     navController: NavHostController, modifier: Modifier = Modifier
 ) {
     val screens = listOf(
-        Screens.ListScreen, Screens.Search, Screens.Profile
+        Screens.WatchlistScreen, Screens.Search, Screens.List, Screens.Profile
     )
 
    NavigationBar(

@@ -8,15 +8,17 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.ryannd.watchlist_mscso.ui.detail.DetailScreen
+import com.ryannd.watchlist_mscso.ui.list.ListScreen
+import com.ryannd.watchlist_mscso.ui.list.detail.ListDetailScreen
 import com.ryannd.watchlist_mscso.ui.profile.ProfileScreen
 import com.ryannd.watchlist_mscso.ui.search.SearchScreen
 import com.ryannd.watchlist_mscso.ui.watchlist.WatchlistScreen
 
 @Composable
 fun NavigationGraph(navController: NavHostController, onComposing: (NavBarState) -> Unit) {
-    NavHost(navController = navController, startDestination = "list_screen?id={id}") {
+    NavHost(navController = navController, startDestination = "watchlist_screen?id={id}") {
         composable(
-            route = "list_screen?id={id}",
+            route = "watchlist_screen?id={id}",
             arguments = listOf(
                 navArgument("id") {
                     nullable = true
@@ -64,6 +66,28 @@ fun NavigationGraph(navController: NavHostController, onComposing: (NavBarState)
             val id = arguments.getString("id") ?: ""
 
             DetailScreen(type, id, onComposing)
+        }
+
+        composable(
+            route = Screens.ListDetail.route,
+            arguments = listOf(
+                navArgument("id") {
+                    type = NavType.StringType
+                    defaultValue = ""
+                    nullable = true
+                }
+            )
+        ) {
+            val arguments = requireNotNull(it.arguments)
+            val id = arguments.getString("id") ?: ""
+
+            ListDetailScreen(id, onComposing)
+        }
+
+        composable(
+            route = Screens.List.route
+        ) {
+            ListScreen()
         }
     }
 }
