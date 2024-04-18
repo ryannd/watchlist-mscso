@@ -82,11 +82,11 @@ class UserDbHelper {
         }
     }
 
-    fun addMediaToList(media: Media, mediaUid: String, type: String, status: String, currEpisode: Int?, currSeason: Int?, rating: Int, onDismissRequest: () -> Unit) {
+    fun addMediaToList(media: Media, type: String, status: String, currEpisode: Int?, currSeason: Int?, rating: Int, onDismissRequest: () -> Unit) {
         val userUid = Firebase.auth.currentUser?.uid
         if(userUid != null) {
             val newMediaEntry = MediaEntry(
-                mediaUid = mediaUid,
+                media= media,
                 status = status,
                 currentEpisode = if(type == "tv") currEpisode else null,
                 currentSeason = if(type == "tv") currSeason else null,

@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.ryannd.watchlist_mscso.db.EntryDbHelper
-import com.ryannd.watchlist_mscso.db.MediaDbHelper
 import com.ryannd.watchlist_mscso.db.UserDbHelper
 import com.ryannd.watchlist_mscso.db.model.Media
 import com.ryannd.watchlist_mscso.db.model.MediaEntry
@@ -24,7 +23,6 @@ class WatchlistViewModel(
 ) : ViewModel(), DefaultLifecycleObserver {
     private val _uiState  = MutableStateFlow(WatchlistUiState())
     private val userDbHelper = UserDbHelper()
-    private val mediaDbHelper = MediaDbHelper()
     private val entryDbHelper = EntryDbHelper()
     val uiState: StateFlow<WatchlistUiState> = _uiState.asStateFlow()
 
@@ -49,16 +47,6 @@ class WatchlistViewModel(
                             _uiState.update {state ->
                                 state.copy(completed = query.documents.mapNotNull {
                                     val entry = it.toObject(MediaEntry::class.java)
-
-                                    if(!_uiState.value.mediaLookup.contains(entry?.mediaUid) && entry?.mediaUid != null) {
-                                        mediaDbHelper.getMedia(entry.mediaUid) { doc ->
-                                            val media = doc.toObject(Media::class.java)
-                                            if(media != null) {
-                                                _uiState.value.mediaLookup[entry.mediaUid] = media
-                                            }
-                                        }
-                                    }
-
                                     entry
                                 })
                             }
@@ -70,16 +58,6 @@ class WatchlistViewModel(
                            _uiState.update {state ->
                                state.copy(planning = query.documents.mapNotNull {
                                    val entry = it.toObject(MediaEntry::class.java)
-
-                                   if(!_uiState.value.mediaLookup.contains(entry?.mediaUid) && entry?.mediaUid != null) {
-                                       mediaDbHelper.getMedia(entry.mediaUid) { doc ->
-                                           val media = doc.toObject(Media::class.java)
-                                           if(media != null) {
-                                               _uiState.value.mediaLookup[entry.mediaUid] = media
-                                           }
-                                       }
-                                   }
-
                                    entry
                                })
                            }
@@ -91,16 +69,6 @@ class WatchlistViewModel(
                            _uiState.update {state ->
                                state.copy(watching = query.documents.mapNotNull {
                                    val entry = it.toObject(MediaEntry::class.java)
-
-                                   if(!_uiState.value.mediaLookup.contains(entry?.mediaUid) && entry?.mediaUid != null) {
-                                       mediaDbHelper.getMedia(entry.mediaUid) { doc ->
-                                           val media = doc.toObject(Media::class.java)
-                                           if(media != null) {
-                                               _uiState.value.mediaLookup[entry.mediaUid] = media
-                                           }
-                                       }
-                                   }
-
                                    entry
                                })
                            }

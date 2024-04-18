@@ -55,10 +55,7 @@ fun WatchlistScreen(
             }
 
             items(currentList ?: listOf()) {
-                val media = listUiState.value.mediaLookup[it.mediaUid]
-                if(media != null) {
-                    WatchlistItem(entry = it, media = media, navigateTo = navigateTo)
-                }
+                WatchlistItem(entry = it, media = it.media, navigateTo = navigateTo)
             }
         }
     }

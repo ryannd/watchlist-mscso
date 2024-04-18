@@ -8,11 +8,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
-import com.google.firebase.firestore.toObject
 import com.ryannd.watchlist_mscso.api.TmdbApi
 import com.ryannd.watchlist_mscso.db.EntryDbHelper
 import com.ryannd.watchlist_mscso.db.ListDbHelper
-import com.ryannd.watchlist_mscso.db.MediaDbHelper
 import com.ryannd.watchlist_mscso.db.ReviewDbHelper
 import com.ryannd.watchlist_mscso.db.UserDbHelper
 import com.ryannd.watchlist_mscso.db.model.CustomList
@@ -33,7 +31,6 @@ class DetailViewModel(private val type: String, private val id: String, private 
     private val _uiState  = MutableStateFlow(DetailUiState())
     val uiState: StateFlow<DetailUiState> = _uiState.asStateFlow()
     private val userDb = UserDbHelper()
-    private val mediaDb = MediaDbHelper()
     private val entryDb = EntryDbHelper()
     private val reviewDb = ReviewDbHelper()
     private val listDb = ListDbHelper()
@@ -114,7 +111,7 @@ class DetailViewModel(private val type: String, private val id: String, private 
         )
         val episode = if(currEpisode == "") null else currEpisode.toInt()
         val season = if(currSeason == "") null else currEpisode.toInt()
-        mediaDb.addNewMediaToList(newMedia, status, episode, season, rating, onDismissRequest)
+        userDb.addMediaToList(newMedia, newMedia.type, status, episode, season, rating, onDismissRequest)
     }
 
     fun editEntry(stateObj: DetailUiState, status: String, currEpisode: String, currSeason: String, rating: Int, onDismissRequest: () -> Unit) {
