@@ -223,7 +223,7 @@ class DetailViewModel(private val type: String, private val id: String, private 
                         title = res.title,
                         backgroundUrl = res.backgroundUrl,
                         description = res.description,
-                        mediaType = "tv",
+                        mediaType = type,
                         numSeasons = res.numSeasons,
                         posterUrl = res.posterUrl,
                         seasons = res.seasons,
@@ -237,7 +237,7 @@ class DetailViewModel(private val type: String, private val id: String, private 
                         title = res.title,
                         backgroundUrl = res.backgroundUrl,
                         description = res.description,
-                        mediaType = "tv",
+                        mediaType = type,
                         posterUrl = res.posterUrl,
                         runtime = res.runtime,
                         tmdbId = res.id.toString()
