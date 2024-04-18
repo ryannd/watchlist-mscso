@@ -1,7 +1,8 @@
 package com.ryannd.watchlist_mscso.ui.list
 
-import com.ryannd.watchlist_mscso.db.model.Media
+import com.ryannd.watchlist_mscso.db.model.CustomList
 
 data class ListUiState(
-    var searchResults: List<Media> = listOf()
+    var allSearchResults: List<CustomList> = listOf(),
+    var mySearchResults: List<CustomList> = listOf()
 )

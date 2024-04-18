@@ -17,6 +17,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.rounded.AddCircle
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FabPosition
@@ -65,6 +66,10 @@ fun DetailScreen(
         mutableStateOf(false)
     }
 
+    val showListDialog = remember {
+        mutableStateOf(false)
+    }
+
     if(showAddDialog.value) {
         MediaDialog(
             mediaType = mediaType,
@@ -89,12 +94,26 @@ fun DetailScreen(
         }
     }
 
+    if(showListDialog.value) {
+        ListDialog(uiState.userLists, uiState.tmdbId, {
+            showListDialog.value = false
+        }, viewModel::addToCustomList)
+    }
+
     Scaffold(
         floatingActionButton = {
             Column(
                 horizontalAlignment = Alignment.End,
                 verticalArrangement = Arrangement.Center,
             ) {
+                SmallFloatingActionButton(
+                    onClick = {
+                        showListDialog.value = true
+                    },
+                ) {
+                    Icon(imageVector = Icons.Filled.Star, contentDescription = "Add to List")
+                }
+                Spacer(modifier = Modifier.size(10.dp))
                 SmallFloatingActionButton(
                     onClick = {
                         showReviewDialog.value = true

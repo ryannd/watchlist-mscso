@@ -68,7 +68,6 @@ fun MediaDialog(
         mutableIntStateOf(stateObj.userEntry?.rating ?: 0)
     }
 
-    Log.d("Add media", stateObj.seasons.toString())
 
     Dialog(onDismissRequest = { onDismissRequest() }, properties = DialogProperties(usePlatformDefaultWidth = false)) {
         ElevatedCard(

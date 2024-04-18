@@ -81,13 +81,13 @@ fun NavigationGraph(navController: NavHostController, onComposing: (NavBarState)
             val arguments = requireNotNull(it.arguments)
             val id = arguments.getString("id") ?: ""
 
-            ListDetailScreen(id, onComposing)
+            ListDetailScreen(id, onComposing, { navigateTo(it, navController) })
         }
 
         composable(
             route = Screens.List.route
         ) {
-            ListScreen()
+            ListScreen(navigateTo = { navigateTo(it, navController) })
         }
     }
 }

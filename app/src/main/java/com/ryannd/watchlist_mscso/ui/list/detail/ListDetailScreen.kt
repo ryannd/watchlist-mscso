@@ -8,6 +8,7 @@ import com.ryannd.watchlist_mscso.ui.nav.NavBarState
 fun ListDetailScreen(
     id: String,
     onComposing: (NavBarState) -> Unit,
+    navigateTo: (String) -> Unit,
     listViewModel: ListDetailViewModel = viewModel(factory = ListDetailViewModelFactory(id, onComposing))
 ) {
 
