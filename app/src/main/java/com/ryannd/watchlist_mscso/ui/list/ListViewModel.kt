@@ -29,6 +29,10 @@ class ListViewModel : ViewModel(), DefaultLifecycleObserver {
 
     override fun onCreate(owner: LifecycleOwner) {
         super.onCreate(owner)
+        getLists()
+    }
+
+    fun getLists() {
         listDbHelper.getAllLists { result ->
             _uiState.update {
                 it.copy(

@@ -59,6 +59,7 @@ fun ListScreen(
     if(showDialog) {
         AddListDialog(onAdd = listViewModel::newList) {
             showDialog = false
+            listViewModel.getLists()
         }
     }
 

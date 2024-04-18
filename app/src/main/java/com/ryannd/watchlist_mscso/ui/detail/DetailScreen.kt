@@ -106,14 +106,16 @@ fun DetailScreen(
                 horizontalAlignment = Alignment.End,
                 verticalArrangement = Arrangement.Center,
             ) {
-                SmallFloatingActionButton(
-                    onClick = {
-                        showListDialog.value = true
-                    },
-                ) {
-                    Icon(imageVector = Icons.Filled.Star, contentDescription = "Add to List")
+                if(uiState.userLists.isNotEmpty()) {
+                    SmallFloatingActionButton(
+                        onClick = {
+                            showListDialog.value = true
+                        },
+                    ) {
+                        Icon(imageVector = Icons.Filled.Star, contentDescription = "Add to List")
+                    }
+                    Spacer(modifier = Modifier.size(10.dp))
                 }
-                Spacer(modifier = Modifier.size(10.dp))
                 SmallFloatingActionButton(
                     onClick = {
                         showReviewDialog.value = true
