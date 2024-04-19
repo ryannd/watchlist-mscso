@@ -10,5 +10,6 @@ data class User(
     val userUid: String = "",
     val listLookup: HashMap<String, String> = HashMap(),
     val reviewLookup: HashMap<String, Boolean> = HashMap(),
+    val profilePic: String = "",
     @DocumentId var firestoreID: String = ""
 )

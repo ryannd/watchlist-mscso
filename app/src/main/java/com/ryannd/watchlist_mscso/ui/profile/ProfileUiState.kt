@@ -10,5 +10,7 @@ data class ProfileUiState(
     var reviews: List<Review> = listOf(),
     var followers: List<User> = listOf(),
     var following: List<User> = listOf(),
-    var mediaLookup: HashMap<String, Media> = HashMap()
+    var mediaLookup: HashMap<String, Media> = HashMap(),
+    var userName: String = "",
+    var profilePic: String = "",
 )

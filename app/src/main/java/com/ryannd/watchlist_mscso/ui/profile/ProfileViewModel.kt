@@ -1,6 +1,11 @@
 package com.ryannd.watchlist_mscso.ui.profile
 
+import android.net.Uri
 import android.util.Log
+import android.widget.Toast
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
@@ -10,6 +15,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.toObject
+import com.google.firebase.storage.FirebaseStorage
 import com.ryannd.watchlist_mscso.db.ReviewDbHelper
 import com.ryannd.watchlist_mscso.db.UserDbHelper
 import com.ryannd.watchlist_mscso.db.model.Review
@@ -49,6 +55,11 @@ class ProfileViewModel(
 
     fun follow() {
         if(Firebase.auth.currentUser?.uid != null) {
+            _uiState.update {
+                it.copy(
+                    userName = Firebase.auth.currentUser?.displayName ?: ""
+                )
+            }
             userDbHelper.getUserData(Firebase.auth.currentUser?.uid!!) {
                 val currUser = it.toObject(User::class.java)
                 if(currUser != null) {
@@ -116,6 +127,29 @@ class ProfileViewModel(
         }
     }
 
+    fun addProfilePicture(uri: Uri) {
+        if(Firebase.auth.currentUser?.uid != null) {
+            val id = Firebase.auth.currentUser?.uid
+            val storageRef = FirebaseStorage.getInstance().reference
+            val imageRef = storageRef.child("images/$id.jpg")
+            val uploadTask = imageRef.putFile(uri)
+
+            uploadTask.addOnSuccessListener {
+                val result = it.metadata!!.reference!!.downloadUrl
+                result.addOnSuccessListener {
+                    val updatedUser = uiState.value.user?.copy(
+                        profilePic = it.toString()
+                    )
+                    if(updatedUser != null) {
+                        userDbHelper.updateUser(updatedUser) {
+                            uiState.value.profilePic = it.toString()
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     private fun fetchUser() {
         val uuid: String? = if(id == "") {
             Firebase.auth.currentUser?.uid
@@ -128,7 +162,7 @@ class ProfileViewModel(
                 val user = it.toObject(User::class.java)
                 Log.d("ProfileViewModel", user.toString())
                 if(user != null) {
-                    _uiState.value = ProfileUiState(user = user)
+                    _uiState.value = ProfileUiState(user = user, profilePic = user.profilePic)
 
                     val reviews = user.reviewLookup.keys.toList()
                     if(reviews.isNotEmpty()) {
