@@ -43,7 +43,6 @@ class DetailViewModel(private val type: String, private val id: String, private 
 
     fun addToCustomList(listIds: List<String>, checked: Map<String, Boolean>, onComplete: () -> Unit) {
         val media = createMedia()
-        Log.d("LIST", checked.toString())
         for(id in listIds) {
             listDb.getList(id) {
                 val list = it.toObject(CustomList::class.java)

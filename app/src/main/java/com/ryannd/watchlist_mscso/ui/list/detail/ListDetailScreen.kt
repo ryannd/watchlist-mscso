@@ -9,10 +9,21 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
@@ -33,32 +44,32 @@ fun ListDetailScreen(
     val uiState by listViewModel.uiState.collectAsState()
     listViewModel.ObserveLifecycle(LocalLifecycleOwner.current.lifecycle)
 
-    Column {
-        Row(
-            modifier = Modifier
-                .height(100.dp)
-                .padding(20.dp)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ){
-            Column {
-                Text(
-                    text = uiState.list.name,
-                    modifier = Modifier.fillMaxWidth(),
-                    textAlign = TextAlign.Center
-                )
-                Text(
-                    text = "List by: ${uiState.list.userName}",
-                    modifier = Modifier.fillMaxWidth(),
-                    textAlign = TextAlign.Center
-                )
+    var editOn by remember {
+        mutableStateOf(false)
+    }
+
+    Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {
+                    editOn = !editOn
+                }
+            ) {
+                Icon(imageVector = if(editOn) Icons.Default.Check else Icons.Default.Edit, contentDescription = "Edit toggle")
             }
         }
-        LazyColumn {
-            items(uiState.list.content) {
-                MediaItem(media = it, navigateTo = navigateTo)
+    ) {
+        if(uiState.list.content.isNotEmpty()) {
+            LazyColumn(
+                modifier = Modifier
+                    .padding(it)
+            ) {
+                items(uiState.list.content) {
+                    MediaItem(media = it, navigateTo = navigateTo, editOn = editOn, onDelete = listViewModel::deleteFromList)
+                }
             }
+        } else {
+            Text(text = "List is empty.", modifier = Modifier.fillMaxWidth().padding(it), textAlign = TextAlign.Center)
         }
     }
 }

@@ -131,7 +131,6 @@ class ProfileViewModel(
                     _uiState.value = ProfileUiState(user = user)
 
                     val reviews = user.reviewLookup.keys.toList()
-                    Log.d("Reviewer", user.reviewLookup.toString())
                     if(reviews.isNotEmpty()) {
                         reviewDbHelper.getReview(user.userUid, reviews) {
                             val review = it.toObject(Review::class.java)
