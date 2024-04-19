@@ -4,6 +4,8 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 import com.ryannd.watchlist_mscso.db.ListDbHelper
 import com.ryannd.watchlist_mscso.db.model.CustomList
 import com.ryannd.watchlist_mscso.db.model.Media
@@ -33,7 +35,8 @@ class ListDetailViewModel(
                 onComposing(NavBarState(title="${list.name} - ${list.userName}", showTopBar = true))
                 _uiState.update {state ->
                     state.copy(
-                        list = list
+                        list = list,
+                        isOwner = list.userId == Firebase.auth.currentUser?.uid
                     )
                 }
             }
@@ -54,6 +57,12 @@ class ListDetailViewModel(
 
         listDb.updateList(_uiState.value.list.firestoreID, updatedList) {
             fetchList()
+            onComplete()
+        }
+    }
+
+    fun deleteList(listId: String, onComplete: () -> Unit) {
+        listDb.deleteList(listId) {
             onComplete()
         }
     }

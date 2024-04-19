@@ -14,6 +14,11 @@ class ListDbHelper {
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val rootCollection = "list"
 
+    fun deleteList(listId: String, onComplete: () -> Unit) {
+        db.collection(rootCollection).document(listId).delete().addOnSuccessListener {
+            onComplete()
+        }
+    }
     fun createList(list: CustomList, onComplete: () -> Unit) {
         db.collection(rootCollection).add(list).addOnSuccessListener {
             onComplete()
