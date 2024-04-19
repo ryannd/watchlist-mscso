@@ -1,7 +1,9 @@
 package com.ryannd.watchlist_mscso.db
 
+import android.util.Log
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.QuerySnapshot
 import com.ryannd.watchlist_mscso.db.model.Review
 
 class ReviewDbHelper {
@@ -29,6 +31,15 @@ class ReviewDbHelper {
     fun getReview(userUid: String, idList: List<String>, onComplete: (doc: DocumentSnapshot) -> Unit) {
         for (id in idList) {
             getReview(userUid, id, onComplete)
+        }
+    }
+
+    fun getMediaReviews(tmdbId: String, onComplete: (List<Review>) -> Unit) {
+        db.collection(rootCollection).document(tmdbId).collection("reviews").get().addOnSuccessListener {
+            val results = it.documents.mapNotNull {
+                it.toObject(Review::class.java)
+            }
+            onComplete(results)
         }
     }
 }

@@ -21,5 +21,6 @@ data class DetailUiState(
     var userEntry: MediaEntry? = null,
     var userReview: Review? = null,
     var userName: String = "",
-    var userLists: List<CustomList> = listOf()
+    var userLists: List<CustomList> = listOf(),
+    var reviews: List<Review> = listOf()
 )

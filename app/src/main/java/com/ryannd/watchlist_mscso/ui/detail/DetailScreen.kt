@@ -1,6 +1,7 @@
 package com.ryannd.watchlist_mscso.ui.detail
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -19,6 +20,7 @@ import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.rounded.AddCircle
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
@@ -40,6 +42,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
@@ -47,7 +51,11 @@ import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.ryannd.watchlist_mscso.R
+import com.ryannd.watchlist_mscso.ui.detail.sections.DescriptionSection
+import com.ryannd.watchlist_mscso.ui.detail.sections.InfoSection
+import com.ryannd.watchlist_mscso.ui.detail.sections.SeasonsSection
 import com.ryannd.watchlist_mscso.ui.nav.NavBarState
+import com.ryannd.watchlist_mscso.ui.profile.ReviewSection
 
 @Composable
 fun DetailScreen(
@@ -91,6 +99,7 @@ fun DetailScreen(
         ) {
             showReviewDialog.value = false
             viewModel.updateEntry()
+            viewModel.getReviews()
         }
     }
 
@@ -104,7 +113,7 @@ fun DetailScreen(
         floatingActionButton = {
             Column(
                 horizontalAlignment = Alignment.End,
-                verticalArrangement = Arrangement.Center,
+                verticalArrangement = Arrangement.Center
             ) {
                 if(uiState.userLists.isNotEmpty()) {
                     SmallFloatingActionButton(
@@ -151,7 +160,7 @@ fun DetailScreen(
             .verticalScroll(rememberScrollState())
             .padding(it)) {
             BoxWithConstraints {
-                val maxHeight = 600.dp
+                val maxHeight = 400.dp
                 val topHeight: Dp = maxHeight * 2 / 3
 
                 Box(modifier = Modifier
@@ -183,7 +192,7 @@ fun DetailScreen(
                 }
 
                 Box(modifier = Modifier
-                    .align(Alignment.BottomCenter)) {
+                    .align(Alignment.Center)) {
                     AsyncImage(
                         model = "https://image.tmdb.org/t/p/w400/${uiState.posterUrl}",
                         contentDescription = uiState.title,
@@ -192,8 +201,27 @@ fun DetailScreen(
                     )
                 }
             }
+            Spacer(modifier = Modifier.size(20.dp))
+            InfoSection(mediaType = uiState.mediaType, releaseDate = uiState.releaseDate, runtime = uiState.runtime, numSeasons = uiState.numSeasons)
 
+            Spacer(modifier = Modifier.size(20.dp))
+
+            DescriptionSection(description = uiState.description)
+
+            Spacer(modifier = Modifier.size(20.dp))
+
+            if(uiState.mediaType == "tv" && uiState.seasons?.isNotEmpty() == true) {
+                SeasonsSection(seasons = uiState.seasons!!)
+            }
+
+            Spacer(modifier = Modifier.size(20.dp))
+
+            ReviewSection(reviews = uiState.reviews)
+
+            Spacer(modifier = Modifier.size(20.dp))
         }
+
+
     }
 
 

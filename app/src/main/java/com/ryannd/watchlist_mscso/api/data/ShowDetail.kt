@@ -17,5 +17,7 @@ data class ShowDetail(
     @SerializedName("seasons")
     val seasons: List<Seasons>,
     @SerializedName("number_of_seasons")
-    val numSeasons: Int
+    val numSeasons: Int,
+    @SerializedName("first_air_date", alternate = ["release_date"])
+    val releaseDate: String
 )

@@ -39,8 +39,18 @@ class DetailViewModel(private val type: String, private val id: String, private 
         getDetails()
         getLists()
         createMedia()
+        getReviews()
     }
 
+    fun getReviews() {
+        reviewDb.getMediaReviews(id) {list ->
+            _uiState.update {
+                it.copy(
+                    reviews = list
+                )
+            }
+        }
+    }
     fun addToCustomList(listIds: List<String>, checked: Map<String, Boolean>, onComplete: () -> Unit) {
         val media = createMedia()
         for(id in listIds) {
@@ -226,7 +236,8 @@ class DetailViewModel(private val type: String, private val id: String, private 
                         numSeasons = res.numSeasons,
                         posterUrl = res.posterUrl,
                         seasons = res.seasons,
-                        tmdbId = res.id.toString()
+                        tmdbId = res.id.toString(),
+                        releaseDate = res.releaseDate
                     )
                     onComposing(NavBarState(title = res.title, showTopBar = true))
                 }
@@ -239,7 +250,8 @@ class DetailViewModel(private val type: String, private val id: String, private 
                         mediaType = type,
                         posterUrl = res.posterUrl,
                         runtime = res.runtime,
-                        tmdbId = res.id.toString()
+                        tmdbId = res.id.toString(),
+                        releaseDate = res.releaseDate
                     )
                     onComposing(NavBarState(title = res.title, showTopBar = true))
                 }
