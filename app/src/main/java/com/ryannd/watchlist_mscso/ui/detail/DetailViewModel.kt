@@ -119,7 +119,7 @@ class DetailViewModel(private val type: String, private val id: String, private 
             poster = stateObj.posterUrl
         )
         val episode = if(currEpisode == "") null else currEpisode.toInt()
-        val season = if(currSeason == "") null else currEpisode.toInt()
+        val season = if(currSeason == "") null else currSeason.toInt()
         userDb.addMediaToList(newMedia, newMedia.type, status, episode, season, rating, onDismissRequest)
     }
 
@@ -211,7 +211,8 @@ class DetailViewModel(private val type: String, private val id: String, private 
     private fun getLists() {
         val uuid = Firebase.auth.currentUser?.uid
         if(uuid != null) {
-            listDb.getUserLists {lists ->
+            listDb.getUserLists { lists ->
+                Log.d("DETAILZ", lists.toString())
                 _uiState.update {
                     it.copy(
                         userLists = lists
@@ -228,31 +229,35 @@ class DetailViewModel(private val type: String, private val id: String, private 
             when(type) {
                 "tv" -> {
                     val res = tmdbApi.getShowDetail(id)
-                    _uiState.value = DetailUiState(
-                        title = res.title,
-                        backgroundUrl = res.backgroundUrl,
-                        description = res.description,
-                        mediaType = type,
-                        numSeasons = res.numSeasons,
-                        posterUrl = res.posterUrl,
-                        seasons = res.seasons,
-                        tmdbId = res.id.toString(),
-                        releaseDate = res.releaseDate
-                    )
+                    _uiState.update {
+                        it.copy(
+                            title = res.title,
+                            backgroundUrl = res.backgroundUrl,
+                            description = res.description,
+                            mediaType = type,
+                            numSeasons = res.numSeasons,
+                            posterUrl = res.posterUrl,
+                            seasons = res.seasons,
+                            tmdbId = res.id.toString(),
+                            releaseDate = res.releaseDate
+                        )
+                    }
                     onComposing(NavBarState(title = res.title, showTopBar = true))
                 }
                 "movie" -> {
                     val res = tmdbApi.getMovieDetail(id)
-                    _uiState.value = DetailUiState(
-                        title = res.title,
-                        backgroundUrl = res.backgroundUrl,
-                        description = res.description,
-                        mediaType = type,
-                        posterUrl = res.posterUrl,
-                        runtime = res.runtime,
-                        tmdbId = res.id.toString(),
-                        releaseDate = res.releaseDate
-                    )
+                    _uiState.update {
+                        it.copy(
+                            title = res.title,
+                            backgroundUrl = res.backgroundUrl,
+                            description = res.description,
+                            mediaType = type,
+                            posterUrl = res.posterUrl,
+                            runtime = res.runtime,
+                            tmdbId = res.id.toString(),
+                            releaseDate = res.releaseDate
+                        )
+                    }
                     onComposing(NavBarState(title = res.title, showTopBar = true))
                 }
                 else -> {

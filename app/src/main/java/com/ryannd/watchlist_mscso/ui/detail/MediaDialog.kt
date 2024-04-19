@@ -130,6 +130,9 @@ fun MediaDialog(
                         DropdownMenuItem(
                             text = { Text("Completed") },
                             onClick = {
+                                season = stateObj.numSeasons.toString()
+                                episode = stateObj.seasons?.get(
+                                    season.toInt() - 1)?.episodeCount.toString()
                                 status = "Completed"
                                 statusExpanded = false
                             }

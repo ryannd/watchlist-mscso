@@ -1,5 +1,6 @@
 package com.ryannd.watchlist_mscso.ui.detail
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement

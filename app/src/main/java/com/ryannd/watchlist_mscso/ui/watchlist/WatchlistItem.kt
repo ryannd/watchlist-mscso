@@ -44,7 +44,7 @@ fun WatchlistItem(
         },
         supportingContent = {
             if(entry.status == "Watching" && media.type == "tv") {
-                Text("${media.type.uppercase(Locale.ROOT)} S${entry.currentSeason}:E:${entry.currentEpisode}")
+                Text("${media.type.uppercase(Locale.ROOT)} S${entry.currentSeason}:E${entry.currentEpisode}")
             }
         },
         trailingContent = { Icon(imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = "To Detail") },

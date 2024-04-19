@@ -114,7 +114,9 @@ fun ProfileScreen(
                 Box(
                     contentAlignment = Alignment.BottomEnd,
                     modifier = Modifier.clickable {
-                        launcher.launch("image/*")
+                        if(id == ""){
+                            launcher.launch("image/*")
+                        }
                     }
                 ) {
                     if(profileUiState.value.profilePic == "") {
@@ -133,7 +135,9 @@ fun ProfileScreen(
                                 .clip(CircleShape),
                             contentScale = ContentScale.Crop)
                     }
-                    Icon(imageVector = Icons.Rounded.AddCircle, contentDescription = "edit profile pic", modifier = Modifier.size(30.dp))
+                   if(id == ""){
+                       Icon(imageVector = Icons.Rounded.AddCircle, contentDescription = "edit profile pic", modifier = Modifier.size(30.dp))
+                   }
                 }
                 Spacer(modifier = Modifier.height(20.dp))
                 Text(text = profileUiState.value.user?.userName ?: "Please login.")
@@ -167,5 +171,13 @@ fun ProfileScreen(
         Text(text = "Followers")
 
         UserSection(users = profileUiState.value.followers, navigateTo = navigateTo)
+
+        Spacer(modifier = Modifier.height(20.dp))
+        
+        if(profileUiState.value.lists.isNotEmpty()){
+            Text(text = "Lists")
+
+            ListSection(lists = profileUiState.value.lists, navigateTo = navigateTo)
+        }
     }
 }

@@ -21,8 +21,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.ryannd.watchlist_mscso.R
 import com.ryannd.watchlist_mscso.db.model.User
 
@@ -55,16 +57,30 @@ fun UserSection(
                 modifier = Modifier.fillMaxHeight()
             ) { page ->
                 val curr = users[page]
-                Image(
-                    painter = painterResource(id = R.drawable.profile),
-                    contentDescription = "Profile",
-                    modifier = Modifier
-                        .size(75.dp)
-                        .clip(CircleShape)
-                        .clickable {
-                            navigateTo("user?id=${curr.firestoreID}")
-                        }
-                )
+                if(curr.profilePic == ""){
+                    Image(
+                        painter = painterResource(id = R.drawable.profile),
+                        contentDescription = "Profile",
+                        modifier = Modifier
+                            .size(75.dp)
+                            .clip(CircleShape)
+                            .clickable {
+                                navigateTo("user?id=${curr.firestoreID}")
+                            }
+                    )
+                } else {
+                    AsyncImage(
+                        model = curr.profilePic,
+                        contentDescription = curr.userName,
+                        modifier = Modifier
+                            .size(75.dp)
+                            .clip(CircleShape)
+                            .clickable {
+                                navigateTo("user?id=${curr.firestoreID}")
+                            },
+                        contentScale = ContentScale.Crop
+                    )
+                }
             }
         }
     }

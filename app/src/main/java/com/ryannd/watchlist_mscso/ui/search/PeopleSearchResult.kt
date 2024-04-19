@@ -34,12 +34,23 @@ fun PeopleSearchResult(
     ListItem(
         headlineContent = { Text(result.userName, maxLines = 1, overflow = TextOverflow.Ellipsis) },
         leadingContent = {
-            Image(
-                painter = painterResource(id = R.drawable.profile),
-                contentDescription = "Profile",
-                modifier = Modifier
-                    .size(50.dp)
-                    .clip(CircleShape))
+            if(result.profilePic == ""){
+                Image(
+                    painter = painterResource(id = R.drawable.profile),
+                    contentDescription = "Profile",
+                    modifier = Modifier
+                        .size(50.dp)
+                        .clip(CircleShape))
+            } else {
+                AsyncImage(
+                    model = result.profilePic,
+                    contentDescription = result.userName,
+                    modifier = Modifier
+                        .size(50.dp)
+                        .clip(CircleShape),
+                    contentScale = ContentScale.Crop
+                )
+            }
         },
         trailingContent = { Icon(imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = "To Detail") },
         modifier = Modifier.clickable {

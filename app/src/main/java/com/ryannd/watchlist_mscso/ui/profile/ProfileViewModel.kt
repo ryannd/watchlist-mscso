@@ -16,6 +16,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.toObject
 import com.google.firebase.storage.FirebaseStorage
+import com.ryannd.watchlist_mscso.db.ListDbHelper
 import com.ryannd.watchlist_mscso.db.ReviewDbHelper
 import com.ryannd.watchlist_mscso.db.UserDbHelper
 import com.ryannd.watchlist_mscso.db.model.Review
@@ -34,6 +35,7 @@ class ProfileViewModel(
     private val _uiState = MutableStateFlow(ProfileUiState())
     private val userDbHelper = UserDbHelper()
     private val reviewDbHelper = ReviewDbHelper()
+    private val listDbHelper = ListDbHelper()
     val uiState: StateFlow<ProfileUiState> = _uiState.asStateFlow()
 
     private val firebaseAuthListener = FirebaseAuth.AuthStateListener {
@@ -143,6 +145,7 @@ class ProfileViewModel(
                     if(updatedUser != null) {
                         userDbHelper.updateUser(updatedUser) {
                             uiState.value.profilePic = it.toString()
+                            fetchUser()
                         }
                     }
                 }
@@ -163,6 +166,14 @@ class ProfileViewModel(
                 Log.d("ProfileViewModel", user.toString())
                 if(user != null) {
                     _uiState.value = ProfileUiState(user = user, profilePic = user.profilePic)
+
+                    listDbHelper.getUserLists { results ->
+                        _uiState.update { state ->
+                            state.copy(
+                                lists = results
+                            )
+                        }
+                    }
 
                     val reviews = user.reviewLookup.keys.toList()
                     if(reviews.isNotEmpty()) {
@@ -209,7 +220,7 @@ class ProfileViewModel(
                                     added.add(follower)
                                     _uiState.update {
                                         it.copy(
-                                            following = added
+                                            followers = added
                                         )
                                     }
                                 }

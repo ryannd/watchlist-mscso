@@ -37,6 +37,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.ryannd.watchlist_mscso.ui.components.CustomListItem
 import com.ryannd.watchlist_mscso.ui.detail.ObserveLifecycle
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -103,36 +104,12 @@ fun ListScreen(
             when (selected) {
                 0 -> {
                     items(uiState.allSearchResults) {list ->
-                        ListItem(
-                            headlineContent = {
-                                Text(list.name)
-                            },
-                            modifier = Modifier.clickable {
-                                navigateTo("list/detail?id=${list.firestoreID}")
-                            },
-                            supportingContent = {
-                                Text(text = "By: ${list.userName} | ${list.content.size} items")
-                            }
-                        )
-
-                        HorizontalDivider()
+                       CustomListItem(list = list, navigateTo = navigateTo)
                     }
                 }
                 1 -> {
                     items(uiState.mySearchResults) {list ->
-                        ListItem(
-                            headlineContent = {
-                                Text(list.name)
-                            },
-                            modifier = Modifier.clickable {
-                                navigateTo("list/detail?id=${list.firestoreID}")
-                            },
-                            supportingContent = {
-                                Text(text = "By: ${list.userName} | ${list.content.size} items")
-                            }
-                        )
-
-                        HorizontalDivider()
+                        CustomListItem(list = list, navigateTo = navigateTo)
                     }
                 }
             }

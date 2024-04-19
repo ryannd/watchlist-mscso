@@ -92,6 +92,7 @@ class MainActivity : ComponentActivity() {
                                                     .build()
                                                 authenticator.user()!!.updateProfile(profileUpdate).addOnCompleteListener {
                                                     isAlertShowing.value = false
+                                                    navController.navigate("watchlist_screen")
                                                 }
                                             }
                                         }
