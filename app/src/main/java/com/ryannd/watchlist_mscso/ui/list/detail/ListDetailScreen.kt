@@ -18,6 +18,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -37,13 +38,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.ClipboardManager
+import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.core.graphics.toColorInt
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.ryannd.watchlist_mscso.Globals
 import com.ryannd.watchlist_mscso.ui.list.detail.MediaItem
 import com.ryannd.watchlist_mscso.ui.detail.ObserveLifecycle
 import com.ryannd.watchlist_mscso.ui.nav.NavBarState
@@ -57,6 +62,8 @@ fun ListDetailScreen(
 ) {
     val uiState by listViewModel.uiState.collectAsState()
     listViewModel.ObserveLifecycle(LocalLifecycleOwner.current.lifecycle)
+    val clipboardManager: ClipboardManager = LocalClipboardManager.current
+    val deeplinkUrl = "${Globals.DeeplinkUri}/list?id=${uiState.list.firestoreID}"
 
     var editOn by remember {
         mutableStateOf(false)
@@ -128,10 +135,21 @@ fun ListDetailScreen(
                 ) {
                     SmallFloatingActionButton(
                         onClick = {
+                            clipboardManager.setText(AnnotatedString(deeplinkUrl))
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Share,
+                            contentDescription = "Share list"
+                        )
+                    }
+                    Spacer(modifier = Modifier.size(10.dp))
+                    SmallFloatingActionButton(
+                        onClick = {
                             showWarningDialog = true
                         },
                     ) {
-                        Icon(imageVector = Icons.Filled.Clear, contentDescription = "Add to List")
+                        Icon(imageVector = Icons.Filled.Clear, contentDescription = "Delete")
                     }
                     Spacer(modifier = Modifier.size(10.dp))
                     FloatingActionButton(
@@ -144,6 +162,17 @@ fun ListDetailScreen(
                             contentDescription = "Edit toggle"
                         )
                     }
+                }
+            } else {
+                FloatingActionButton(
+                    onClick = {
+                        clipboardManager.setText(AnnotatedString(deeplinkUrl))
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Share,
+                        contentDescription = "Share list"
+                    )
                 }
             }
         }

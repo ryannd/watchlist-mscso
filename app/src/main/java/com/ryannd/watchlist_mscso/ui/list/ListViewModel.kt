@@ -8,6 +8,7 @@ import com.google.firebase.auth.auth
 import com.ryannd.watchlist_mscso.db.ListDbHelper
 import com.ryannd.watchlist_mscso.db.model.CustomList
 import com.ryannd.watchlist_mscso.ui.profile.ProfileUiState
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

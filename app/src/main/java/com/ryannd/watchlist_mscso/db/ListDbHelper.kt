@@ -57,4 +57,14 @@ class ListDbHelper {
             }
         }
     }
+
+    fun getUserLists(uuid: String, onComplete: (results: List<CustomList>) -> Unit) {
+        db.collection(rootCollection).whereEqualTo("userId", uuid).get().addOnSuccessListener {
+            val results = it.documents.mapNotNull {
+                it.toObject(CustomList::class.java)
+            }
+
+            onComplete(results)
+        }
+    }
 }

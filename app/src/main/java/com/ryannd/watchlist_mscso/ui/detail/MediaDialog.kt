@@ -130,9 +130,11 @@ fun MediaDialog(
                         DropdownMenuItem(
                             text = { Text("Completed") },
                             onClick = {
-                                season = stateObj.numSeasons.toString()
-                                episode = stateObj.seasons?.get(
-                                    season.toInt() - 1)?.episodeCount.toString()
+                                if(mediaType == "tv") {
+                                    season = stateObj.numSeasons.toString()
+                                    episode = stateObj.seasons?.get(
+                                        season.toInt() - 1)?.episodeCount.toString()
+                                }
                                 status = "Completed"
                                 statusExpanded = false
                             }
@@ -195,7 +197,7 @@ fun MediaDialog(
                 Column(Modifier.fillMaxWidth()) {
                     Text(text = "Rating", fontWeight = FontWeight.SemiBold)
                     Spacer(modifier = Modifier.size(5.dp))
-                    val starsColor = if(status == "Planning") Color.Gray else Color.Yellow
+                    val starsColor = if(status != "Completed") Color.Gray else Color.Yellow
                     RatingBar(rating = rating, starsColor = starsColor, enabled = status != "Planning") {
                         rating = it
                     }

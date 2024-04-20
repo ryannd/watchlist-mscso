@@ -148,7 +148,8 @@ fun ProfileScreen(
 
         Button(
             onClick = {
-                navigateTo("list_screen?id=${id}")
+                val url = if(id != "") "watchlist_screen?id=${id}" else "watchlist_screen"
+                navigateTo(url)
             },
             modifier = Modifier.fillMaxWidth()
         )

@@ -7,6 +7,8 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
+import com.ryannd.watchlist_mscso.Globals
 import com.ryannd.watchlist_mscso.ui.detail.DetailScreen
 import com.ryannd.watchlist_mscso.ui.list.ListScreen
 import com.ryannd.watchlist_mscso.ui.list.detail.ListDetailScreen
@@ -16,6 +18,7 @@ import com.ryannd.watchlist_mscso.ui.watchlist.WatchlistScreen
 
 @Composable
 fun NavigationGraph(navController: NavHostController, onComposing: (NavBarState) -> Unit) {
+
     NavHost(navController = navController, startDestination = "watchlist_screen?id={id}") {
         composable(
             route = "watchlist_screen?id={id}",
@@ -70,6 +73,11 @@ fun NavigationGraph(navController: NavHostController, onComposing: (NavBarState)
 
         composable(
             route = Screens.ListDetail.route,
+            deepLinks = listOf(
+                navDeepLink {
+                    uriPattern = "${Globals.DeeplinkUri}/list?id={id}"
+                }
+            ),
             arguments = listOf(
                 navArgument("id") {
                     type = NavType.StringType

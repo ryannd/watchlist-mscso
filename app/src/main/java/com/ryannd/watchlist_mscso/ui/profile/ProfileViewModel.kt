@@ -167,11 +167,22 @@ class ProfileViewModel(
                 if(user != null) {
                     _uiState.value = ProfileUiState(user = user, profilePic = user.profilePic)
 
-                    listDbHelper.getUserLists { results ->
-                        _uiState.update { state ->
-                            state.copy(
-                                lists = results
-                            )
+                    if(id == "") {
+                        listDbHelper.getUserLists { results ->
+                            _uiState.update { state ->
+                                state.copy(
+                                    lists = results
+                                )
+                            }
+                        }
+                    } else {
+                        listDbHelper.getUserLists(id) { results ->
+                            _uiState.update { state ->
+                                state.copy(
+                                    lists = results
+                                )
+                            }
+
                         }
                     }
 
@@ -199,7 +210,10 @@ class ProfileViewModel(
                             val following = it.toObject(User::class.java)
                             if(following != null) {
                                 val added = _uiState.value.following.toMutableList()
-                                if(added.indexOf(following) == -1) {
+                                val idx = added.indexOfFirst {
+                                    it.firestoreID == following.firestoreID
+                                }
+                                if(idx == -1) {
                                     added.add(following)
                                     _uiState.update {
                                         it.copy(
@@ -215,8 +229,11 @@ class ProfileViewModel(
                         userDbHelper.getUserData(user.followerList) {
                             val follower = it.toObject(User::class.java)
                             if(follower != null) {
-                                val added = _uiState.value.following.toMutableList()
-                                if(added.indexOf(follower) == -1) {
+                                val added = _uiState.value.followers.toMutableList()
+                                val idx = added.indexOfFirst {
+                                    it.firestoreID == follower.firestoreID
+                                }
+                                if(idx == -1) {
                                     added.add(follower)
                                     _uiState.update {
                                         it.copy(

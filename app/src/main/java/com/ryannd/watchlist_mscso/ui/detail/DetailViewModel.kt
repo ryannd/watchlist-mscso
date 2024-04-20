@@ -118,8 +118,8 @@ class DetailViewModel(private val type: String, private val id: String, private 
             tmdbId = stateObj.tmdbId,
             poster = stateObj.posterUrl
         )
-        val episode = if(currEpisode == "") null else currEpisode.toInt()
-        val season = if(currSeason == "") null else currSeason.toInt()
+        val episode = if(currEpisode == "" || currEpisode == "null") null else currEpisode.toInt()
+        val season = if(currSeason == "" || currSeason == "null") null else currSeason.toInt()
         userDb.addMediaToList(newMedia, newMedia.type, status, episode, season, rating, onDismissRequest)
     }
 

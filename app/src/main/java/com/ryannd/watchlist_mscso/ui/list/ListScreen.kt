@@ -3,8 +3,10 @@ package com.ryannd.watchlist_mscso.ui.list
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -49,10 +51,6 @@ fun ListScreen(
     val uiState by listViewModel.uiState.collectAsState()
     listViewModel.ObserveLifecycle(LocalLifecycleOwner.current.lifecycle)
 
-    var text by remember {
-        mutableStateOf("")
-    }
-
     var showDialog by remember {
         mutableStateOf(false)
     }
@@ -69,19 +67,10 @@ fun ListScreen(
     Column {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(8.dp)
+            horizontalArrangement = Arrangement.End,
+            modifier = Modifier.padding(8.dp).fillMaxWidth()
         ) {
-            TextField(
-                value = text,
-                onValueChange = {
-                    text = it
-                },
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(5.dp)
-                    .border(BorderStroke(1.dp, Color.Black), RoundedCornerShape(5.dp)),
-                trailingIcon = { Icon(imageVector = Icons.Outlined.Search, contentDescription = "Search Icon") }
-            )
+
             IconButton(
                 onClick = {
                           showDialog = true

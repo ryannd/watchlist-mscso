@@ -7,9 +7,11 @@ import com.google.firebase.auth.auth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.MetadataChanges
 import com.google.firebase.firestore.QueryDocumentSnapshot
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.firestore
+import com.google.firebase.firestore.snapshots
 import com.ryannd.watchlist_mscso.db.model.Media
 import com.ryannd.watchlist_mscso.db.model.MediaEntry
 import com.ryannd.watchlist_mscso.db.model.Review
@@ -33,15 +35,21 @@ class UserDbHelper {
        }
     }
     fun getUserData(uuid: String, onComplete: (doc: DocumentSnapshot) -> Unit) {
-        db.collection(rootCollection).document(uuid).get().addOnSuccessListener {
-            onComplete(it)
+        db.collection(rootCollection).document(uuid).addSnapshotListener(MetadataChanges.INCLUDE) { value, error ->
+            if (value != null) {
+                onComplete(value)
+            }
         }
     }
 
     fun getUserData(onComplete: (doc: DocumentSnapshot) -> Unit) {
         val userUid = Firebase.auth.currentUser?.uid
         if(userUid != null) {
-            db.collection(rootCollection).document(userUid).get().addOnSuccessListener(onComplete)
+            db.collection(rootCollection).document(userUid).addSnapshotListener(MetadataChanges.INCLUDE) { value, error ->
+                if (value != null) {
+                    onComplete(value)
+                }
+            }
         }
     }
 
